@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/admin.html}">
+
+<head>
+    <link rel="stylesheet" href="/css/style_help.css" />
+</head>
+
+<body>
+    <div class="container" layout:fragment="content">
+        <!-- double box -->
+        <div class="container__double-box">
+            <div class="container__seller-box">
+                <div class="seller-box__icon-seller">
+                    <img src="/images/nguoi ban.svg" alt="" />
+                </div>
+                <div class="seller-box__text-seller">
+                    <h2>Cửa hàng kinh doanh</h2>
+                    <p>Hướng dẫn bán hàng nhanh chóng và an toàn trên Chợ Trời</p>
+                </div>
+            </div>
+            <div class="container__buyer-box">
+                <div class="buyer-box__icon-buyer">
+                    <img src="/images/nguoi mua.svg" alt="" />
+                </div>
+                <div class="buyer-box__text-buyer">
+                    <h2>Cá nhân mua hàng</h2>
+                    <p>Hướng dẫn mua hàng nhanh chóng và tiện lợi trên Chợ Trời</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- questions -->
+        <div class="container__questions">
+            <h2>Câu hỏi thường gặp</h2>
+            <div class="container__questions-box">
+                <div class="container__questions-box_lest">
+                    <ul>
+                        <li><a href="">Tôi được đăng bao nhiêu tin một tài khoản?</a></li>
+                        <li><a href="">Mẹo mua hàng an toàn</a></li>
+                        <li><a href="">Hướng dẫn đăng lại tin khi bị từ chối?</a></li>
+                        <li>
+                            <a href="">Tôi phải làm gì khi tin đăng của tôi bị từ chối?</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="container__questions-box_right">
+                    <ul>
+                        <li><a href="">Các bước rao bán một món hàng</a></li>
+                        <li><a href="">Tôi cần làm gì để xóa tin đã đăng?</a></li>
+                        <li>
+                            <a href="">Tôi cần làm gì để thay đổi thông tin cá nhân?</a>
+                        </li>
+                        <li><a href="">Đẩy tin là gì?</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <!-- news -->
+        <div class="container__news">
+            <h2>Tin tức mới</h2>
+            <div class="container__news-layout">
+                <div class="container__news-item">
+                    <a href="" class="container__news-item-head">Thay đổi thông tin vị trí đăng trong mục Xem thống kê</a
+            >
+            <span>7/11/2020 8:48</span>
+            <p>
+              Để giúp bạn nắm rõ được chính xác tin đăng của mình hiển thị ở vị
+              trí nào khi người mua tìm kiếm sản phẩm...
+            </p>
+            <a href="" class="container__news-item-button">Xem thêm >></a>
+                </div>
+                <div class="container__news-item">
+                    <a href="" class="container__news-item-head">Chợ Trời ra mắt hình thức đáng giá bài viết bằng hình ảnh</a
+            >
+            <span>7/11/2020 8:48</span>
+            <p>
+              Từ ngày 11/11/2020, Chợ Trời ra mắt hình thức đắng giá bài viết
+              bằng những phản hồi hình ảnh...
+            </p>
+            <a href="" class="container__news-item-button">Xem thêm >></a>
+                </div>
+                <div class="container__news-item">
+                    <a href="" class="container__news-item-head">Thay đổi chuyên mục đăng tin cho sản phẩm "thời trang"</a
+            >
+            <span>7/11/2020 8:48</span>
+            <p>
+              Theo yêu cầu từ nhiều người bán cũng như giúp người dùng có trải
+              nghiệm mua bán được hiệu quả...
+            </p>
+            <a href="" class="container__news-item-button">Xem thêm >></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

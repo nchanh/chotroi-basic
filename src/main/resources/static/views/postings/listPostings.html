@@ -1,0 +1,288 @@
+<div class="shadow bg-white rounded" id="!/listShops" ng-controller="postingCtrl">
+    <!-- <span class="card-shopmanager-title mb-4">DANH SÁCH NGƯỜI DÙNG</span> -->
+    <div class="card-header">
+        <h5 class="m-0 font-weight-bold text-warning">
+            <i class="fad fa-users-cog"></i> Danh sách {{titleContent}}: {{postings.length}} bài đăng
+        </h5>
+    </div>
+    <div class="card-body">
+        <form class="form-inline mb-2">
+            <div class="form-inline">
+                <div class="form-inline ml-2">
+                    <label>Hiển thị&nbsp;</label>
+                    <select id="pageSize" class="form-control" ng-change="repaginate()" ng-model="itemsPerPage" convert-to-number>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="{{postings.length">Tất cả</option>
+          </select>
+                    <label>&nbsp;bài đăng</label>
+                </div>
+            </div>
+            <div class="input-group mb-2 mr-sm-2 ml-auto">
+                <div class="input-group-prepend">
+                    <div class="input-group-text"><i class="fal fa-file-search"></i></div>
+                </div>
+                <input type="text" class="form-control" ng-model="searchName" placeholder="Tìm thông tin..." />
+            </div>
+        </form>
+        <table class="table table-hover table-responsive-sm text-center">
+            <thead class="thead-inverse">
+                <tr>
+                    <th>
+                        <a href="" ng-click="sortBy('id')">
+              ID
+              <span
+                ng-show="propertyName === 'id'"
+                ng-class="{reverse: reverse}"
+                class="sortOrderList"
+              ></span>
+            </a>
+                    </th>
+                    <th>
+                        <a href="" ng-click="sortBy('type')">
+              Nhu cầu
+              <span
+                ng-show="propertyName === 'type'"
+                ng-class="{reverse: reverse}"
+                class="sortOrderList"
+              ></span>
+            </a>
+                    </th>
+                    <th>
+                        <a href="" ng-click="sortBy('date')">
+              Ngày đăng
+              <span
+                ng-show="propertyName === 'date'"
+                ng-class="{reverse: reverse}"
+                class="sortOrderList"
+              ></span>
+            </a>
+                    </th>
+                    <th>
+                        <a href="" ng-click="sortBy('status')">
+              Trạng thái
+              <span
+                ng-show="propertyName === 'phone'"
+                ng-class="{reverse: reverse}"
+                class="sortOrderList"
+              ></span>
+            </a>
+                    </th>
+                    <th>
+                        <a href="" ng-click="sortBy('user')">
+              Người đăng
+              <span
+                ng-show="propertyName === 'userId'"
+                ng-class="{reverse: reverse}"
+                class="sortOrderList"
+              ></span>
+            </a>
+                    </th>
+                    <th>
+                        <a href="" ng-click="sortBy('product')">
+              Danh mục
+              <span
+                ng-show="propertyName === 'productId'"
+                ng-class="{reverse: reverse}"
+                class="sortOrderList"
+              ></span>
+            </a>
+                    </th>
+                    <th>&nbsp;</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody ng-repeat="item in postings | orderBy:propertyName:reverse | filter:searchName | limitTo:itemsPerPage:itemsPerPage*(currentPage-1)" class="text-center">
+                <tr>
+                    <td scope="row">{{item.id}}</td>
+                    <td ng-if=" item.type==false">Muốn bán</td>
+                    <td ng-if="item.type == true">Muốn mua</td>
+                    <td>{{item.date | date:'dd/MM/yyyy'}}</td>
+                    <td ng-if="item.status == 'unapproved'">Chưa duyệt</td>
+                    <td ng-if="item.status == 'approved'">Đã duyệt</td>
+                    <td ng-if="item.status == 'sold'">Đã bán</td>
+                    <td ng-if="item.status == 'block'">Bị khóa</td>
+                    <td ng-if="item.user != null">{{item.user.username}}</td>
+                    <td ng-if="item.shop != null">{{item.shop.username}}</td>
+                    <td>{{item.product.name}}</td>
+                    <td class="row">
+                        <button type="button" title="Chỉnh sửa trạng thái" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg" ng-click="getPosting(item.id)">
+                                    <i class="fal fa-edit"></i>
+                                </button> &nbsp;
+                        <button type="button" title="Xóa tài khoản" class="btn btn-danger" data-toggle="modal" data-target="#warningDelete" ng-click="getPosting(item.id)">
+                                    <i class="fal fa-trash"></i>
+                                </button>
+                    </td>
+                    <td>
+                        <button type="button" title="Xem chi tiết" class="btn" data-toggle="modal" data-target="#showInformation" ng-click="getPosting(item.id)">
+                                    <i class="fal fa-external-link"></i>
+                        </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="card-footer text-center">
+        <ul class="d-flex justify-content-center pagination-sm" uib-pagination total-items="postings.length" items-per-page="itemsPerPage" ng-model="currentPage" max-size="5" boundary-link-numbers="true" ng-change="pageChanged()"></ul>
+    </div>
+
+    <!-- Modal show information -->
+    <div class="modal fade" id="showInformation" tabindex="-1" role="dialog" aria-labelledby="showInformationTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-bold" id="exampleModalLongTitle">
+                        Thông tin chi tiết bài đăng
+                    </h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                </div>
+                <div class="modal-body">
+                    <!--Carousel Wrapper-->
+                    <div id="carousel-thumb" class="carousel slide carousel-fade carousel-thumbnails" data-ride="carousel">
+                        <!--Slides-->
+                        <div class="carousel-inner" role="listbox">
+                            <div class="carousel-item active" ng-if="posting.postings[0].picture1 != ''">
+                                <img class="d-block w-100" ng-src="http://localhost:8080/getimage1/{{posting.postings[0].id}}" alt="First slide" width="450" height="350" />
+                            </div>
+                            <div class="carousel-item" ng-if="posting.postings[0].picture2 != ''">
+                                <img class="d-block w-100" ng-src="http://localhost:8080/getimage2/{{posting.postings[0].id}}" alt="Second slide" width="450" height="350" />
+                            </div>
+                            <div class="carousel-item" ng-if="posting.postings[0].picture3 != ''">
+                                <img class="d-block w-100" ng-src="http://localhost:8080/getimage3/{{posting.postings[0].id}}" alt="Third slide" width="450" height="350" />
+                            </div>
+                            <div class="carousel-item" ng-if="posting.postings[0].picture4 != ''">
+                                <img class="d-block w-100" ng-src="http://localhost:8080/getimage4/{{posting.postings[0].id}}" alt="Third slide" width="450" height="350" />
+                            </div>
+                        </div>
+                        <!--/.Slides-->
+                        <!--Controls-->
+                        <a class="carousel-control-prev" href="#carousel-thumb" role="button" data-slide="prev" target="_self">
+                            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Previous</span>
+                        </a>
+                        <a class="carousel-control-next" href="#carousel-thumb" role="button" data-slide="next" target="_self">
+                            <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                            <span class="sr-only">Next</span>
+                        </a>
+                    </div>
+                    <!--/.Carousel Wrapper-->
+                    <div class="card-body text-left">
+                        <div class="form-group">
+                            <span><b>ID:</b> {{posting.postings[0].id}}</span>
+                        </div>
+                        <div class="form-group">
+                            <span><b>Tiêu đề:</b> {{posting.postings[0].title}}</span>
+                        </div>
+                        <div class="form-group">
+                            <span><b>Hãng sản phẩm:</b>
+                                            {{posting.postings[0].manufacturer}}</span>
+                        </div>
+                        <div class="form-group">
+                            <span><b>Loại sản phẩm:</b>
+                                            {{posting.postings[0].product_type}}</span>
+                        </div>
+                        <div class="form-group">
+                            <span><b>Nội dung mô tả:</b> {{posting.postings[0].content}}</span>
+                        </div>
+                        <div class="form-group">
+                            <span><b>Giá cả:</b> {{posting.postings[0].price | currency : "" :
+                0}} đ</span>
+                        </div>
+                        <div class="form-group">
+                            <span><b>Địa chỉ:</b> {{posting.postings[0].address}}</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                    Đóng
+                                </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal show warning delete -->
+    <div class="modal fade" id="warningDelete" tabindex="-1" role="dialog" aria-labelledby="warningDeleteLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="exampleModalLabel">
+                        Bạn có chắc chắn xóa bài đăng <b>ID {{posting.id}}</b> không?
+                    </h6>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                    Đóng
+                                </button>
+                    <button type="button" class="btn btn-danger" ng-click="delete(posting.id)">
+                                    Xóa người dùng
+                                </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal show edit profile -->
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <b>Chỉnh sửa trạng thái bài đăng</b>
+                </div>
+                <div class="modal-body text-left">
+                    <form name="updateForm" class="form-group" enctype="multipart/form-data">
+                        <div class="form-group text-center">
+                            <div class="form-check-inline">
+                                <label class="form-check-label">
+                                                <input type="radio" class="form-check-input" name="optradio"
+                                                    value="unapproved" ng-model="posting.status"
+                                                    ng-checked="posting.status == 'unapproved'" />
+                                                <i class="fad fa-shield-check text-danger"></i> Chưa duyệt
+                                            </label>
+                            </div>
+                            &emsp;
+                            <div class="form-check-inline">
+                                <label class="form-check-label">
+                                                <input type="radio" class="form-check-input" name="optradio"
+                                                    value="approved" ng-model="posting.status"
+                                                    ng-checked="posting.status == 'approved'" />
+                                                <i class="fad fa-shield-check text-success"></i> Đã duyệt
+                                            </label>
+                            </div>
+                            &emsp;
+                            <div class="form-check-inline">
+                                <label class="form-check-label">
+                                                <input type="radio" class="form-check-input" name="optradio"
+                                                    value="sold" ng-model="posting.status"
+                                                    ng-checked="posting.status == 'sold'" />
+                                                <i class="fad fa-shopping-cart"></i> Đã bán
+                                            </label>
+                            </div>
+                            &emsp;
+                            <div class="form-check-inline">
+                                <label class="form-check-label">
+                                                <input type="radio" class="form-check-input" name="optradio"
+                                                    value="block" ng-model="posting.status"
+                                                    ng-checked="posting.status == 'block'" />
+                                                <i class="fad fa-ban text-danger"></i> Bị khóa
+                                            </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                                    Đóng
+                                </button>
+                    <button type="button" class="btn btn-primary" ng-click="update(posting.id)">
+                                    Cập nhật
+                                </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

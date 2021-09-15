@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/admin.html}">
+
+<head>
+    <style>
+        .btn-collapsed-icon {
+            border: solid #222;
+            border-width: 0 1px 1px 0;
+            display: inline;
+            cursor: pointer;
+            padding: 3px;
+            position: absolute;
+            right: 0;
+        }
+        
+        .card-category a.btn.collapsed h6 {
+            transform: rotate(40deg);
+            -webkit-transform: rotate(40deg);
+            transition: 0.3s transform ease-in-out;
+        }
+        
+        .card-category a.btn h6 {
+            transform: rotate(-140deg);
+            -webkit-transform: rotate(-140deg);
+            transition: 0.3s transform ease-in-out;
+        }
+    </style>
+    <script type="text/javascript">
+        function getProduct(value) {
+            document.getElementById("productId").value = value;
+        }
+
+        function previewFile(input) {
+            var file1 = document.getElementById("uploadPicture1");
+            var file2 = document.getElementById("uploadPicture2");
+            var file3 = document.getElementById("uploadPicture3");
+            var file4 = document.getElementById("uploadPicture4");
+
+            if (file1.value != "") {
+                file1.style.display = "none";
+                file2.style.display = "block";
+            }
+            if (file2.value != "") {
+                file2.style.display = "none";
+                file3.style.display = "block";
+            }
+            if (file3.value != "") {
+                file3.style.display = "none";
+                file4.style.display = "block";
+            }
+            if (file4.value != "") {
+                file4.style.display = "none";
+            }
+
+            const [file] = input.files;
+            const preview = document.getElementById("preview");
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                const img = document.createElement("img");
+                img.src = e.target.result;
+                img.width = 150;
+                img.height = 150;
+                img.alt = "file";
+
+                preview.appendChild(img);
+            };
+
+            reader.readAsDataURL(file);
+        }
+    </script>
+</head>
+
+<body>
+    <div class="container-fluid mb-5" ng-app="myApp" layout:fragment="content">
+        <div class="row col-12" ng-controller="posting">
+            <div class="col-12 text-center">
+                <h2 class="text-uppercase">ĐĂNG TIN</h2>
+                <h5 class="text-muted">
+                    Đăng các món đồ đã qua sử dụng và bạn không còn sử dụng đến. Chúng tôi sẽ giải quyết giúp bạn!
+                </h5>
+                <hr />
+            </div>
+            <div class="col-md-3 col-12 accordion" id="accordionExample" style="font-size: 12px">
+                <h5 class="text-center font-weight-bold">Danh mục sản phẩm</h5>
+                <div ng-repeat="item in list_product">
+                    <div class="card-category" id="heading{{$index}}">
+                        <a class="list-group-item btn collapsed text-left" type="button" data-toggle="collapse" data-target="#collapse{{$index}}" aria-expanded="true" aria-controls="collapse{{$index}}" style="font-size: 12px">
+                            <span class="font-weight-bold">{{item.name}}</span>
+                            <h6 class="mr-3 btn-collapsed-icon"></h6>
+                        </a>
+                    </div>
+                    <div id="collapse{{$index}}" class="collapse" aria-labelledby="heading{{$index}}" data-parent="#accordionExample">
+                        <input type="button" class="list-group-item list-group-item-action" ng-repeat="i in item.products" value="{{i.name}}" onclick="getProduct(this.value)" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-9 col-12">
+                <span id="demo"></span>
+                <div th:if="${message != null}">
+                    <h6 class="alert alert-success text-center" th:text="${message}"></h6>
+                </div>
+                <div th:if="${messageError != null}">
+                    <h6 class="alert alert-danger text-center" th:text="${messageError}"></h6>
+                </div>
+                <form th:action="@{/postingdetails/saveOrUpdate}" th:object="${postingDetailDto}" method="post" enctype="multipart/form-data">
+                    <div class="form-group">
+                        <label class="font-weight-bold">Nhu cầu:</label>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" th:name="postingType" name="typePosting" id="typePosting1" value="true" style="cursor: pointer" />
+                            <label class="form-check-label" for="typePosting1" style="cursor: pointer">Muốn mua</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" th:name="postingType" name="typePosting" id="typePosting2" value="false" checked style="cursor: pointer" />
+                            <label class="form-check-label" for="typePosting2" style="cursor: pointer">Muốn bán</label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="font-weight-bold">Danh mục:</label>
+                        <input th:name="productName" type="text" class="form-control" name="" id="productId" placeholder="Danh mục" readonly required />
+                        <small id="helpId" class="text-muted">Bạn chọn danh mục ở bảng <b>Danh mục sản phẩm</b> cạnh bên.</small>
+                    </div>
+                    <div class="form-group">
+                        <label class="font-weight-bold">Tiêu đề:</label>
+                        <input th:field="*{title}" type="text" class="form-control" name="" id="" maxlength="500" placeholder="Tiêu đề" />
+                        <small id="helpId" class="text-muted">Ví dụ: MacBook Pro 16 inch - Intel Core i9 8-Core 2.4GHz /
+                            64GB
+                            / 8TB / Radeon Pro 5500M 8GB - Space Gray</small>
+                    </div>
+                    <div class="form-group">
+                        <label class="font-weight-bold">Hãng sản xuất:</label>
+                        <input th:field="*{manufacturer}" type="text" class="form-control" name="" id="" placeholder="Hãng sản xuất" />
+                        <small id="helpId" class="text-muted">Ví dụ: Apple, Samsung, Asus, HP,...</small>
+                    </div>
+                    <div class="form-group">
+                        <label class="font-weight-bold">Loại sản phẩm:</label>
+                        <input th:field="*{product_type}" type="text" class="form-control" name="" id="" placeholder="Loại sản phẩm" />
+                        <small id="helpId" class="text-muted">Ví dụ: Mackbook Pro 16 inch, SAMSUNG Galaxy Book Flex,
+                            Laptop
+                            Asus F571GT-BQ266T...</small>
+                    </div>
+                    <div class="form-group">
+                        <label class="font-weight-bold">Nội dung mô tả:</label>
+                        <textarea rows="5" th:field="*{content}" class="form-control" name="" id="" placeholder="Nội dung mô tả"></textarea>
+                        <small id="helpId" class="text-muted">Ví dụ: CPU, Ram, GPU, Ổ cứng,...</small>
+                    </div>
+                    <div class="form-group" style="display: none">
+                        <label class="font-weight-bold">Giá cả:</label>
+                        <input th:field="*{price}" type="text" class="form-control" name="" id="" placeholder="Giá cả" />
+                    </div>
+                    <div class="form-group">
+                        <label class="font-weight-bold">Giá cả:</label>
+                        <input type="text" class="form-control money_format" th:name="strPrice" placeholder="Giá cả" />
+                    </div>
+                    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+                    <script type="text/javascript" src="/libs/simple.money.format.js"></script>
+                    <script type="text/javascript">
+                        $(".money_format").simpleMoneyFormat();
+                    </script>
+                    <label class="font-weight-bold">Địa chỉ:</label>
+                    <div class="row form-group">
+                        <div class="col-sm-12 col-md-12 col-lg-4">
+                            <select class="custom-select" ng-options="item.name_with_type for item in tinhs" ng-model="tinhSelect" ng-change="selectTinh()">
+                                <option value="">Chọn tỉnh, thành phố</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-4" ng-show="indexQuan != ''" ng-hide="indexQuan == ''">
+                            <select class="custom-select" ng-options="item.name_with_type for item in listQuanHuyen" ng-model="huyenSelect" ng-change="selectHuyen()">
+                                <option value="">Chọn quận, huyện</option>
+                            </select>
+                        </div>
+                        <div class="col-sm-12 col-md-12 col-lg-4" ng-show="indexXa != ''" ng-hide="indexXa == ''">
+                            <select class="custom-select" ng-options="item.name_with_type for item in listXa" ng-model="xaSelect">
+                                <option value="">Chọn xã, phường</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="display: none">
+                        <input type="text" value="" th:field="*{address}" />
+                        <input type="text" value="{{xaSelect.name_with_type}}" th:name="addressPhuongXa" />
+                        <input type="text" value="{{huyenSelect.name_with_type}}" th:name="addressQuanHuyen" />
+                        <input type="text" value="{{tinhSelect.name_with_type}}" th:name="addressTinhThanhPho" />
+                    </div>
+                    <div class="form-group">
+                        <label class="font-weight-bold">Hỉnh ảnh:</label>
+                        <div id="preview"></div>
+                        <input type="file" th:field="*{photo1}" class="form-control col-4" id="uploadPicture1" onchange="previewFile(this);" style="cursor: pointer; border: 0" />
+                        <input type="file" th:field="*{photo2}" class="form-control col-4" id="uploadPicture2" onchange="previewFile(this);" style="display: none; cursor: pointer; border: 0" />
+                        <input type="file" th:field="*{photo3}" class="form-control col-4" id="uploadPicture3" onchange="previewFile(this);" style="display: none; cursor: pointer; border: 0" />
+                        <input type="file" th:field="*{photo4}" class="form-control col-4" id="uploadPicture4" onchange="previewFile(this);" style="display: none; cursor: pointer; border: 0" />
+                        <small id="helpId" class="text-muted">Tải lên tối thiểu 3 hình ảnh và kích thước hình ảnh dưới 1MB.</small>
+                    </div>
+                    <div class="form-group text-center">
+                        <button type="submit" class="btn btn-primary rounded">
+                            Đăng tin
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

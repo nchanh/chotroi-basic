@@ -1,0 +1,318 @@
+<div class="shadow bg-white rounded" id="!/listUsers" ng-controller="userCtrl">
+    <!-- <span class="card-shopmanager-title mb-4">DANH SÁCH NGƯỜI DÙNG</span> -->
+    <div class="card-header">
+        <h5 class="m-0 font-weight-bold text-warning"><i class="fad fa-users-cog"></i> Danh sách {{titleContent}}: {{users.length}} người dùng
+        </h5>
+    </div>
+    <div class="card-body">
+        <form class="form-inline mb-2">
+            <div class="form-inline">
+                <div class="form-inline ml-2">
+                    <label>Hiển thị&nbsp;</label>
+                    <select id="pageSize" class="form-control" ng-change="repaginate()" ng-model="itemsPerPage" convert-to-number>
+                        <option value="5">5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                        <option value="{{users.length">Tất cả</option>
+                    </select>
+                    <label>&nbsp;người dùng</label>
+                </div>
+            </div>
+            <div class="input-group mb-2 mr-sm-2 ml-auto">
+                <div class="input-group-prepend">
+                    <div class="input-group-text"><i class="fal fa-file-search"></i></div>
+                </div>
+                <input type="text" class="form-control" ng-model="searchName" placeholder="Tìm thông tin...">
+            </div>
+        </form>
+        <table class="table table-hover table-responsive-sm text-center">
+            <thead class="thead-inverse">
+                <tr>
+                    <th>
+                        <a href="" ng-click="sortBy('id')">
+                            ID
+                            <span ng-show="propertyName === 'id'" ng-class="{reverse: reverse}"
+                                class="sortOrderList"></span>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="" ng-click="sortBy('username')">
+                            Tên đăng nhập
+                            <span ng-show="propertyName === 'username'" ng-class="{reverse: reverse}"
+                                class="sortOrderList"></span>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="" ng-click="sortBy('fullname')">
+                            Họ tên
+                            <span ng-show="propertyName === 'fullname'" ng-class="{reverse: reverse}"
+                                class="sortOrderList"></span>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="" ng-click="sortBy('phone')">
+                            Số điện thoại
+                            <span ng-show="propertyName === 'phone'" ng-class="{reverse: reverse}"
+                                class="sortOrderList"></span>
+                        </a>
+                    </th>
+                    <th>
+                        <a href="" ng-click="sortBy('email')">
+                            Email
+                            <span ng-show="propertyName === 'email'" ng-class="{reverse: reverse}"
+                                class="sortOrderList"></span>
+                        </a>
+                    </th>
+                    <th>&nbsp;</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody ng-repeat="item in users | orderBy:propertyName:reverse | filter:searchName | limitTo:itemsPerPage:itemsPerPage*(currentPage-1)" class="text-center">
+                <tr>
+                    <td scope="row">{{item.id}}</td>
+                    <td class=" text-left">{{item.username}}</td>
+                    <td class="text-left">{{item.fullname}}</td>
+                    <td>{{item.phone}}</td>
+                    <td class="text-left">{{item.email}}</td>
+                    <td class="row">
+                        <button type="button" title="Chỉnh sửa tài khoản" class="btn btn-primary" data-toggle="modal" data-target=".bd-example-modal-lg" ng-click="getUser(item.id)">
+                                    <i class="fal fa-edit"></i>
+                                </button> &nbsp;
+                        <button type="button" title="Xóa tài khoản" class="btn btn-danger" data-toggle="modal" data-target="#warningDelete" ng-click="getUser(item.id)">
+                                    <i class="fal fa-trash"></i>
+                                </button> &nbsp;
+                        <button type="button" title="Khóa tài khoản" class="btn btn-danger" data-toggle="modal" data-target="#warningBlock" ng-if="users[$index].status != 'block'" ng-click="getUser(item.id)">
+                                    <i class="fal fa-ban"></i>
+                                </button>
+                        <button type="button" title="Mở khóa tài khoản" class="btn btn-success" data-toggle="modal" data-target="#warningActive" ng-if="users[$index].status == 'block'" ng-click="getUser(item.id)">
+                                    <i class="fad fa-shield-check"></i>
+                                </button>
+                    </td>
+                    <td>
+                        <button type="button" title="Xem chi tiết" class="btn" data-toggle="modal" data-target="#showInformation" ng-click="getUser(item.id)">
+                                    <i class="fal fa-external-link"></i>
+                                </button>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="card-footer text-center">
+        <ul class="d-flex justify-content-center pagination-sm" uib-pagination total-items="users.length" items-per-page="itemsPerPage" ng-model="currentPage" max-size="5" boundary-link-numbers="true" ng-change="pageChanged()"></ul>
+    </div>
+
+    <!-- Modal show information -->
+    <div class="modal fade" id="showInformation" tabindex="-1" role="dialog" aria-labelledby="showInformationTitle" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">{{user.id}} - {{user.fullname}}</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                    <span aria-hidden="true">&times;</span>
+                                </button>
+                </div>
+                <div class="modal-body">
+                    <img ng-src="http://localhost:8080/getimage/{{user.username}}/user" class="card-img-top" alt="{{user.username}}" style="width: 200px; height: 200px;">
+                    <div class="card-body text-left">
+                        <div class="form-group">
+                            <span ng-if="user.gender == false" title="Giới tính"><i
+                                                class="fal fa-venus-mars"></i>:
+                                            Nữ</span>
+                            <span ng-if="user.gender == true" title="Giới tính"><i
+                                                class="fal fa-venus-mars"></i>:
+                                            Nam</span>
+                        </div>
+                        <div class="form-group">
+                            <span title="Email"><i class="fal fa-mailbox"></i>: {{user.email}}</i></span>
+                        </div>
+                        <div class="form-group">
+                            <span title="Số điện thoại"><i class="fal fa-phone"></i>: {{user.phone}}</span>
+                        </div>
+                        <div class="form-group">
+                            <span title="Ngày sinh"><i class="fal fa-birthday-cake"></i></i>:
+                                            {{user.birthday | date:'dd/MM/yyyy'}}
+                                        </span>
+                        </div>
+                        <div class="form-group">
+                            <span title="Địa chỉ"><i class="fal fa-map-pin"></i>: {{user.address}}</span>
+                        </div>
+                        <div class="form-group">
+                            <span title="Mật khẩu"><i class="fal fa-lock-alt"></i>: {{user.password}}</span>
+                        </div>
+                        <div class="form-group">
+                            <span title="Trạng thái">
+                                            <i class="fal fa-user"></i>:
+                                            <span ng-if="user.status == 'activated'">Đã kích hoạt</span>
+                            <span ng-if="user.status == 'not-activated'">Chưa kích hoạt</span>
+                            <span ng-if="user.status == 'block'">Đã bị khóa</span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal show warning delete -->
+    <div class="modal fade" id="warningDelete" tabindex="-1" role="dialog" aria-labelledby="warningDeleteLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="exampleModalLabel">
+                        Bạn có chắc chắn xóa người dùng <b>{{user.fullname}}</b> không?
+                    </h6>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-danger" ng-click="delete(user.id)">Xóa người
+                                    dùng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal show warning block -->
+    <div class="modal fade" id="warningBlock" tabindex="-1" role="dialog" aria-labelledby="warningBlockLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="exampleModalLabel">
+                        Bạn có chắc chắn khóa người dùng <b>{{user.fullname}}</b> không?
+                    </h6>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-danger" ng-click="block(user.id)">Khóa người
+                                    dùng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal show warning active -->
+    <div class="modal fade" id="warningActive" tabindex="-1" role="dialog" aria-labelledby="warningActiveLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h6 class="modal-title" id="exampleModalLabel">
+                        Bạn có chắc chắn mở khóa người dùng <b>{{user.fullname}}</b> không?
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" ng-model="statusActive" name="statusRadioOptions" id="statusRadio1" value="activated">
+                            <label for="statusRadio1" class="form-check-label">Kích hoạt tài khoản.</label>
+                        </div>
+                        <div class="form-check form-check-inline">
+                            <input class="form-check-input" type="radio" ng-model="statusActive" name="statusRadioOptions" id="statusRadio2" value="not-activated">
+                            <label for="statusRadio2" class="form-check-label">Không kích hoạt tài
+                                            khoản.</label>
+                        </div>
+                    </h6>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-success" ng-click="active(user.id)">Mở khóa người
+                                    dùng</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal show edit profile block -->
+    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header text-center">
+                    <b>Chỉnh sửa tài khoản</b>
+                </div>
+                <div class="modal-body text-left">
+                    <form name="updateForm" class="form-group" enctype="multipart/form-data">
+                        <div class="form-group mb-1">
+                            <label>Id:</label>
+                            <input type="text-danger" class="form-control" placeholder="Id" name="Id" ng-model="user.id" readonly>
+                        </div>
+                        <div class="form-group mb-1">
+                            <label>Tên tài khoản:</label>
+                            <input type="text" class="form-control" placeholder="Tên tài khoản" name="username" ng-model="user.username">
+                        </div>
+                        <div class="form-group  mb-1">
+                            <label>Họ tên:</label>
+                            <input type="text" class="form-control" placeholder="Họ tên" name="fullname" ng-model="user.fullname" required>
+                        </div>
+                        <div class="form-group  mb-1">
+                            <label>Email:</label>
+                            <input type="text" class="form-control" placeholder="Email" name="email" ng-model="user.email">
+                        </div>
+                        <div class="form-group  mb-1">
+                            <label>Số điện thoại:</label>
+                            <input type="text" class="form-control" placeholder="Số điện thoại" name="phone" ng-model="user.phone">
+                        </div>
+                        <div class="form-group mb-2">
+                            <label>Hình ảnh:</label><br>
+                            <img ng-src="http://localhost:8080/getimage/{{user.username}}/user" class="card-img-top mb-1" alt="{{user.username}}" style="width: 150px; height: 150px;"><br>
+                            <input type="file" file-model="myForm.files[0]" id="uploadFile" style="display: none" />
+                            <label for="uploadFile" class="btn btn-outline-primary"><i class="fad fa-file-upload"></i> Chọn ảnh</label>
+
+                        </div>
+                        <div class="form-group mb-1">
+                            <label>Ngày sinh(MM-dd-yyyy):</label>
+                            <input type="text" class="form-control" placeholder="Ngày sinh" name="birthday" ng-model="user.birthday" min="1997-01-01" max="2030-12-31" date='MM-dd-yyyy'>
+                        </div>
+                        <div class="form-group mb-1">
+                            <label for="gender">Giới tính: </label>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" ng-model="user.gender" id="male" value="true" name="customRadioInline1" class="custom-control-input" ng-checked="user.gender == true">
+                                <label class="custom-control-label" for="male">Nam</label>
+                            </div>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" ng-model="user.gender" id="female" value="false" name="customRadioInline1" class="custom-control-input" ng-checked="user.gender == false">
+                                <label class="custom-control-label" for="female">Nữ</label>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label>Địa chỉ:</label>
+                            <input type="text" class="form-control" placeholder="Địa chỉ" name="password" ng-model="user.address">
+                        </div>
+                        <div class="form-group">
+                            <label>Mật khẩu:</label>
+                            <input type="text" class="form-control" placeholder="Mật khẩu" name="password" ng-model="user.password">
+                        </div>
+                        <div class="form-group">
+                            <label>Trạng thái: </label>
+                            <div class="form-check-inline">
+                                <label class="form-check-label">
+                                                <input type="radio" class="form-check-input" name="optradio"
+                                                    value="activated" ng-model="user.status"
+                                                    ng-checked="user.status == 'activated'">
+                                                Đã kích hoạt
+                                            </label>
+                            </div>
+                            <div class="form-check-inline">
+                                <label class="form-check-label">
+                                                <input type="radio" class="form-check-input" name="optradio"
+                                                    value="not-activated" ng-model="user.status"
+                                                    ng-checked="user.status == 'not-activated'">
+                                                Chưa kích hoạt
+                                            </label>
+                            </div>
+                            <div class="form-check-inline">
+                                <label class="form-check-label">
+                                                <input type="radio" class="form-check-input" name="optradio"
+                                                    value="block" ng-model="user.status"
+                                                    ng-checked="user.status == 'block'">
+                                                Khóa tài khoản
+                                            </label>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+                    <button type="button" class="btn btn-primary" ng-click="update(user.id)">Cập
+                                    nhật</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

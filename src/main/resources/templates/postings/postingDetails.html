@@ -1,0 +1,572 @@
+<!doctype html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/admin.html}">
+
+<head>
+    <link rel="stylesheet" href="/css/bootstrap-rating.css">
+    <link rel="stylesheet" href="/css/rating.css">
+    <style>
+        #gallery_01 img {
+            border: 2px solid white;
+        }
+        /*Change the colour*/
+        
+        .active img {
+            border: 2px solid #333 !important;
+        }
+    </style>
+    <script type="text/javascript">
+        function previewFile(input) {
+            var file1 = document.getElementById("uploadPicture");
+
+            const [file] = input.files;
+            const preview = document.getElementById("preview");
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                const img = document.createElement("img");
+                img.src = e.target.result;
+                img.width = 150;
+                img.height = 150;
+                img.alt = "file";
+
+                preview.appendChild(img);
+            };
+
+            reader.readAsDataURL(file);
+        };
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+    <script src="/js/jquery.ez-plus.js"></script>
+
+</head>
+
+<body ng-app="myApp">
+    <div class="container mb-5" layout:fragment="content" ng-controller="postingDetail">
+        <div class="row p-3 pb-5" style="background-color: #f5f0e1;">
+            <article class="col-lg-8 col-md-12 col-sm-12 ">
+                <div class="justify-content-center card-postingdetail">
+                    <div class="row">
+                        <div class="col-sm-12 col-md-12 col-lg-9">
+                            <img id="zoom_03" ng-src="/getimage1/{{postingdetail.id}}" data-zoom-image="/getimage/chotroi" />
+                        </div>
+                        <div class="col-sm-12 col-md-12  col-lg-3" id="gallery_01">
+                            <div class="col-sm-3 mb-1 gallery_01">
+                                <a href="#" ng-if="postingdetail.picture1 != ''" data-image="/getimage1/{{postingdetail.id}}" data-zoom-image="/getimage1/{{postingdetail.id}}">
+                                    <img id="img_01" ng-src="/getimage1/{{postingdetail.id}}" />
+                                </a>
+                            </div>
+                            <div class="col-sm-3 mb-1 gallery_01">
+                                <a href="#" ng-if="postingdetail.picture2 != ''" data-image="/getimage2/{{postingdetail.id}}" data-zoom-image="/getimage2/{{postingdetail.id}}">
+                                    <img id="img_01" ng-src="/getimage2/{{postingdetail.id}}" />
+                                </a>
+                            </div>
+                            <div class="col-sm-3 mb-1 gallery_01">
+                                <a href="#" ng-if="postingdetail.picture3 != ''" data-image="/getimage3/{{postingdetail.id}}" data-zoom-image="/getimage3/{{postingdetail.id}}">
+                                    <img id="img_01" ng-src="/getimage3/{{postingdetail.id}}" />
+                                </a>
+                            </div>
+                            <div class="col-sm-3 gallery_01">
+                                <a href="#" ng-if="postingdetail.picture4 != ''" data-image="/getimage4/{{postingdetail.id}}" data-zoom-image="/getimage4/{{postingdetail.id}}">
+                                    <img id="img_01" ng-src="/getimage4/{{postingdetail.id}}" />
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+
+                    <script type="text/javascript">
+                        jQuery.noConflict();
+                        jQuery(function($) {
+                            $("#zoom_03").ezPlus({
+                                zoomType: 'lens',
+                                containLensZoom: true,
+                                gallery: 'gallery_01',
+                                cursor: 'none',
+                                galleryActiveClass: 'active'
+                            });
+
+                            $("#zoom_03").bind("click", function(e) {
+                                var ez = $('#zoom_03').data('ezPlus');
+                                ez.closeAll(); //NEW: This function force hides the lens, tint and window
+                                $.fancybox(ez.getGalleryList());
+                                return false;
+                            });
+
+                        });
+                    </script>
+
+                    <!--/.Carousel Wrapper-->
+                    <div class="row">
+                        <div class="mt-4">
+                            <span class="card-postingdetail-title">{{postingdetail.title}}</span>
+                        </div>
+                    </div>
+                    <div class="row mt-2">
+                        <div class="col-sm-12 col-md-9 col-lg-9 d-flex align-items-center">
+                            <span class="card-postingdetail-price">{{postingdetail.price | currency : "" : 0}} đ</span>
+                        </div>
+                        <input type="text" value="" name="usernameLogin" th:if="${user} == null" style="display: none;">
+                        <input type="text" th:value="*{user.username}" name="usernameLogin" th:if="${user} != null" style="display: none;">
+                        <div class="col-sm-12 col-md-3 col-lg-3">
+                            <div class="card-postingdetail-button">
+                                <div class="text-right filtered-product-button-save-posting" th:if="${user} == null">
+                                    <button type="button" class="btn" data-toggle="modal" data-target="#errorModal" ng-click="postingSave()" title="Lưu tin">
+                                        <i class="fal fa-heart-circle"></i>
+                                    </button>
+                                </div>
+                                <div th:if="${user} != null">
+                                    <form th:action="@{/savePost}" method="POST" class="product-button-save-posting" ng-if="checkButtonSave(postingdetail.id) != true">
+                                        <div style="display: none;">
+                                            <input type="text" value="{{postingdetail.id}}" th:name="postingDetailId">
+                                            <input type="text" value="{{url}}" th:name="url">
+                                        </div>
+                                        <button type="submit" class="btn" ng-click="postingSave()" title="Lưu tin">
+                                            <i class="fal fa-heart-circle"></i>
+                                        </button>
+                                    </form>
+                                    <div ng-repeat="ps in postingSaveds">
+                                        <form th:action="@{/delete}" method="POST" class="product-button-save-posting" ng-if="postingdetail.id == ps.postingID">
+                                            <div style="display: none;">
+                                                <input type="text" value="{{ps.id}}" th:name="postingSaveId">
+                                                <input type="text" value="{{url}}" th:name="url">
+                                            </div>
+                                            <button type="submit" class="btn" ng-click="postingSave()" title="Hủy lưu tin">
+                                                <i class="fad fa-heart-circle"></i>
+                                            </button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card-postingdetail-button" th:each="ps : ${postingSaved}">
+                                <a th:if="${ps.assessor != null}" class="fas fa-save mr-2" th:href="@{'/delete/' + ${ps.id}}"> Đã lưu</a>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-hide="postingdetail.posting.status == 'block'">
+                        <div class="row card-postingdetail-infoproduct">
+                            <div class="col-12 my-2">
+                                <span><i class="fad fa-map-marker-alt"></i> Địa chỉ: {{postingdetail.address}}</span>
+                            </div>
+                            <div class="col-12 my-2">
+                                <span><i class="fad fa-conveyor-belt-alt"></i> Hãng sản phẩm:
+                                {{postingdetail.manufacturer}}</span>
+                            </div>
+                            <div class="col-12 my-2">
+                                <span><i class="fad fa-tasks"></i> Loại sản phẩm: {{postingdetail.product_type}}</span>
+                            </div>
+                        </div>
+                        <hr style="background-color:grey; height: 1px">
+                        <span class="font-weight-bold">Nội dung mô tả:</span>
+                        <pre style="background-color: #f5f0e1; font: 15px Open Sans; border: 0px; line-height: 25px;">
+	                    <p>{{ postingdetail.content }}</p>
+                    </pre>
+                    </div>
+                    <div class="row">
+                        <span class="card-postingdetail-title-show text-success font-italic" ng-if="postingdetail.posting.status == 'approved'">
+                            <i class="fas fa-shield-alt"></i> Tin đăng này đã được kiểm duyệt. Nếu gặp vấn đề, vui lòng báo cáo hoặc liên hệ CSKH để được trợ giúp.
+                        </span>
+                        <span class="card-postingdetail-title-show text-warning font-italic" ng-if="postingdetail.posting.status == 'unapproved'">
+                            <i class="fad fa-exclamation-triangle"></i> Tin đăng này chưa kiểm duyệt. Nếu gặp vấn đề, vui lòng báo cáo hoặc liên hệ CSKH để được trợ giúp.
+                        </span>
+                        <span class="card-postingdetail-title-show text-danger font-italic" ng-if="postingdetail.posting.status == 'block'">
+                            <i class="fad fa-file-times"></i> Tin đăng này đã bị khóa. Nếu gặp vấn đề, vui lòng báo cáo hoặc liên hệ CSKH để được trợ giúp.
+                        </span>
+                        <span class="card-postingdetail-title-show text-danger font-italic" ng-if="postingdetail.posting.status == 'sold'">
+                            <i class="fad fa-trash"></i> Tin đăng này đã bán. Nếu gặp vấn đề, vui lòng báo cáo hoặc liên hệ CSKH để được trợ giúp.
+                        </span>
+                    </div>
+                    <div class="row">
+                        <div class="col-3"></div>
+                        <div class="col-9 card-postingdetail-report">
+                            <button>
+                                <i class="fas fa-exclamation-triangle"></i> Tin đăng đã bán
+                            </button>
+                            <button>
+                                <i class="fas fa-exclamation-triangle"></i> Spam
+                            </button>
+                            <button>
+                                <i class="fas fa-exclamation-triangle"></i> Vi phạm quy tắc
+                            </button>
+                        </div>
+                        <!-- <div class="col-2"></div> -->
+                    </div>
+                </div>
+            </article>
+            <aside class="col-lg-4 col-md-12 col-sm-12">
+                <div class="row">
+                    <div class="col-5">
+                        <div class="card-postingdetail-imageuser" ng-if="postingdetail.posting.user != null">
+                            <img ng-src="/getimage/{{postingdetail.posting.user.username}}/username" class="img-thumbnail">
+                        </div>
+                        <div class="card-postingdetail-imageuser" ng-if="postingdetail.posting.shop != null">
+                            <img ng-src="/getimage/{{postingdetail.posting.shop.username}}/username" class="img-thumbnail">
+                        </div>
+                    </div>
+                    <div class="col-7">
+                        <div class="card-postingdetail-buttonicon" ng-if="postingdetail.posting.user != null">
+                            <a ng-href="/{{postingdetail.posting.user.id}}/profile">
+                                <i class="fas fa-id-card"> Xem trang</i>
+                            </a>
+                        </div>
+                        <div class="card-postingdetail-buttonicon" ng-if="postingdetail.posting.shop != null">
+                            <a ng-href="/{{postingdetail.posting.shop.id}}/profile">
+                                <i class="fas fa-id-card"> Xem trang</i>
+                            </a>
+                        </div>
+                        <div class="card-postingdetail-buttonicon">
+                            <button data-toggle="modal" data-target="#exampleModal" th:if="${user} != null">
+                                <i class="fas fa-vote-yea"> Đánh giá</i>
+                            </button>
+                            <button type="button" data-toggle="modal" data-target="#errorModal" th:if="${user} == null">
+                                <i class="fas fa-vote-yea"> Đánh giá</i>
+                            </button>
+                            <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="exampleModalLabel">Đánh giá đơn vị cung cấp</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <form th:action="@{/saveRate}" th:object="${rateDTO}" method="POST" enctype="multipart/form-data">
+                                            <input type="text" name="postingDetailId" style="display: none;" value="{{postingdetail.id}}">
+                                            <div class="modal-body" th:each="sr : ${userRated}">
+                                                <div class="rating-stars text-center" th:if="${sr.point == 5}">
+                                                    <ul id="stars">
+                                                        <li class="star selected" data-value="1" name="point"><i class="fa fa-star fa-fw"></i></li>
+                                                        <li class="star selected" data-value="2" name="point"><i class="fa fa-star fa-fw"></i></li>
+                                                        <li class="star selected" data-value="3" name="point"><i class="fa fa-star fa-fw"></i></li>
+                                                        <li class="star selected" data-value="4" name="point"><i class="fa fa-star fa-fw"></i></li>
+                                                        <li class="star selected" data-value="5" name="point"><i class="fa fa-star fa-fw"></i></li>
+                                                    </ul>
+                                                </div>
+                                                <div class="rating-stars text-center" th:if="${sr.point < 5 && sr.point >= 4}">
+                                                    <ul id="stars">
+                                                        <li class="star selected" data-value="1" name="point"><i class="fa fa-star fa-fw"></i></li>
+                                                        <li class="star selected" data-value="2" name="point"><i class="fa fa-star fa-fw"></i></li>
+                                                        <li class="star selected" data-value="3" name="point"><i class="fa fa-star fa-fw"></i></li>
+                                                        <li class="star selected" data-value="4" name="point"><i class="fa fa-star fa-fw"></i></li>
+                                                        <li class="star" data-value="5" name="point"><i class="fa fa-star fa-fw"></i></li>
+                                                    </ul>
+                                                </div>
+                                                <div class="rating-stars text-center" th:if="${sr.point < 4 && sr.point >= 3}">
+                                                    <ul id="stars">
+                                                        <li class="star selected" data-value="1" name="point"><i class="fa fa-star fa-fw"></i></li>
+                                                        <li class="star selected" data-value="2" name="point"><i class="fa fa-star fa-fw"></i></li>
+                                                        <li class="star selected" data-value="3" name="point"><i class="fa fa-star fa-fw"></i></li>
+                                                        <li class="star" data-value="4" name="point"><i class="fa fa-star fa-fw"></i></li>
+                                                        <li class="star" data-value="5" name="point"><i class="fa fa-star fa-fw"></i></li>
+                                                    </ul>
+                                                </div>
+                                                <div class="rating-stars text-center" th:if="${sr.point < 3 && sr.point >= 2}">
+                                                    <ul id="stars">
+                                                        <li class="star selected" data-value="1" name="point"><i class="fa fa-star fa-fw"></i></li>
+                                                        <li class="star selected" data-value="2" name="point"><i class="fa fa-star fa-fw"></i></li>
+                                                        <li class="star" data-value="3" name="point"><i class="fa fa-star fa-fw"></i></li>
+                                                        <li class="star" data-value="4" name="point"><i class="fa fa-star fa-fw"></i></li>
+                                                        <li class="star" data-value="5" name="point"><i class="fa fa-star fa-fw"></i></li>
+                                                    </ul>
+                                                </div>
+                                                <div class="rating-stars text-center" th:if="${sr.point < 2 && sr.point >= 1}">
+                                                    <ul id="stars">
+                                                        <li class="star selected" data-value="1" name="point"><i class="fa fa-star fa-fw"></i></li>
+                                                        <li class="star" data-value="2" name="point"><i class="fa fa-star fa-fw"></i></li>
+                                                        <li class="star" data-value="3" name="point"><i class="fa fa-star fa-fw"></i></li>
+                                                        <li class="star" data-value="4" name="point"><i class="fa fa-star fa-fw"></i></li>
+                                                        <li class="star" data-value="5" name="point"><i class="fa fa-star fa-fw"></i></li>
+                                                    </ul>
+                                                </div>
+                                                <div class="rating-stars text-center" th:if="${sr.point == 0}">
+                                                    <ul id="stars">
+                                                        <li class="star" data-value="1" name="point"><i class="fa fa-star fa-fw"></i></li>
+                                                        <li class="star" data-value="2" name="point"><i class="fa fa-star fa-fw"></i></li>
+                                                        <li class="star" data-value="3" name="point"><i class="fa fa-star fa-fw"></i></li>
+                                                        <li class="star" data-value="4" name="point"><i class="fa fa-star fa-fw"></i></li>
+                                                        <li class="star" data-value="5" name="point"><i class="fa fa-star fa-fw"></i></li>
+                                                    </ul>
+                                                </div>
+
+                                                <!--  -->
+                                                <input type="hidden" id="point" th:field="*{point}" value="">
+                                                <div class="form-group success-box" th:if="${sr.point == 0}">
+                                                    <textarea class="form-control" th:field="*{reason}" id="reason" rows="3" placeholder="Hãy viết nhận xét của bạn tại đây!">
+	                                                </textarea>
+                                                </div>
+                                                <div class="form-group success-box" th:if="${sr.point != 0}">
+                                                    <textarea th:text="${sr.reason}" class="form-control" id="reason" rows="3" placeholder="Hãy viết nhận xét của bạn tại đây!">
+	                                                </textarea>
+                                                </div>
+                                                <div class="form-group card-postingdetail-upload">
+                                                    <div id="preview"></div>
+                                                    <label style="cursor: pointer;"><i class="fas fa-file-image"> Thêm
+                                                            hình ảnh</i>
+                                                        <input type="file" th:field="*{image}"
+                                                            class="form-control col-3" id="uploadPicture"
+                                                            onchange="previewFile(this);"
+                                                            style="cursor: pointer; display: none;" />
+                                                    </label>
+                                                    <span class="text-muted font-italic">Hình ảnh kích thước dưới 1MB.</span>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-secondary" data-dismiss="modal">Hủy</button>
+                                                <button type="submit" class="btn btn-primary">Đánh
+                                                    giá</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-12 ml-2" ng-if="postingdetail.posting.user != null">
+                        <span class="card-postingdetail-nameuser">{{postingdetail.posting.user.fullname}}</span>
+                    </div>
+                    <div class="col-12 ml-2" ng-if="postingdetail.posting.shop != null">
+                        <span class="card-postingdetail-nameuser">{{postingdetail.posting.shop.shopname}}</span>
+                    </div>
+                </div>
+                <br>
+                <div class="row">
+                    <div class="col-6 card-postingdetail-rating" ng-if="postingdetail.posting.user != null">
+                        <span> Người dùng </span>
+                    </div>
+                    <div class="col-6 card-postingdetail-rating" ng-if="postingdetail.posting.shop != null">
+                        <span> Cửa hàng </span>
+                    </div>
+                    <div class="col-6 card-postingdetail-rating" data-toggle="modal" data-target=".bd-example-modal-lg" style="border-left: 1px solid gray;">
+                        <span style="cursor: pointer;">Đánh giá</span>
+                    </div>
+                    <div class="modal fade bd-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" aria-hidden="true">
+                        <div class="modal-dialog modal-lg" role="document">
+                            <div class="modal-content">
+                                <div class="modal-header text-center">
+                                    <h5 class="modal-title" id="exampleModalScrollableTitle">ĐÁNH GIÁ ĐƠN VỊ CUNG CẤP
+                                    </h5>
+                                    <button type="button" class="close" data-dismiss="modal" data-target=".bd-example-modal-lg" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                    </button>
+                                </div>
+                                <div class="modal-body">
+                                    <table class="table table-borderless">
+                                        <tbody th:each="sr : ${listRated}" class="border-bottom">
+                                            <tr>
+                                                <td th:text="${sr.assessor}" class="font-weight-bold"></td>
+                                                <td th:if="${sr.point == 5}">
+                                                    <div class="stars">
+                                                        <form>
+                                                            <input class="fas fa-star star-5" id="star-5" type="radio" name="star" disabled checked /> <label class="fas fa-star" for="star-5"></label> <input class="fas fa-star star-4" id="star-4" type="radio"
+                                                                name="star" disabled /> <label class="fas fa-star" for="star-4"></label> <input class="fas fa-star star-3" id="star-3" type="radio" name="star" disabled /> <label class="fas fa-star" for="star-3"></label>                                                            <input class="fas fa-star star-2" id="star-2" type="radio" name="star" disabled /> <label class="fas fa-star" for="star-2"></label> <input class="fas fa-star star-1" id="star-1" type="radio"
+                                                                name="star" disabled /> <label class="fas fa-star" for="star-1"></label>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                                <td th:if="${sr.point < 5 && sr.point >= 4}">
+                                                    <div class="stars">
+                                                        <form>
+                                                            <input class="fas fa-star star-5" id="star-5" type="radio" name="star" disabled /> <label class="fas fa-star" for="star-5"></label> <input class="fas fa-star star-4" id="star-4" type="radio"
+                                                                name="star" disabled checked />
+                                                            <label class="fas fa-star" for="star-4"></label> <input class="fas fa-star star-3" id="star-3" type="radio" name="star" disabled /> <label class="fas fa-star" for="star-3"></label> <input class="fas fa-star star-2"
+                                                                id="star-2" type="radio" name="star" disabled /> <label class="fas fa-star" for="star-2"></label> <input class="fas fa-star star-1" id="star-1" type="radio" name="star" disabled /> <label class="fas fa-star"
+                                                                for="star-1"></label>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                                <td th:if="${sr.point < 4 && sr.point >= 3}">
+                                                    <div class="stars">
+                                                        <form>
+                                                            <input class="fas fa-star star-5" id="star-5" type="radio" name="star" disabled /> <label class="fas fa-star" for="star-5"></label> <input class="fas fa-star star-4" id="star-4" type="radio"
+                                                                name="star" disabled /> <label class="fas fa-star" for="star-4"></label> <input class="fas fa-star star-3" id="star-3" type="radio" name="star" disabled checked />
+                                                            <label class="fas fa-star" for="star-3"></label> <input class="fas fa-star star-2" id="star-2" type="radio" name="star" disabled /> <label class="fas fa-star" for="star-2"></label> <input class="fas fa-star star-1"
+                                                                id="star-1" type="radio" name="star" disabled /> <label class="fas fa-star" for="star-1"></label>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                                <td th:if="${sr.point < 3 && sr.point >= 2}">
+                                                    <div class="stars">
+                                                        <form>
+                                                            <input class="fas fa-star star-5" id="star-5" type="radio" name="star" disabled /> <label class="fas fa-star" for="star-5"></label> <input class="fas fa-star star-4" id="star-4" type="radio"
+                                                                name="star" disabled /> <label class="fas fa-star" for="star-4"></label> <input class="fas fa-star star-3" id="star-3" type="radio" name="star" disabled /> <label class="fas fa-star" for="star-3"></label>                                                            <input class="fas fa-star star-2" id="star-2" type="radio" name="star" disabled checked />
+                                                            <label class="fas fa-star" for="star-2"></label> <input class="fas fa-star star-1" id="star-1" type="radio" name="star" disabled /> <label class="fas fa-star" for="star-1"></label>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                                <td th:if="${sr.point < 2 && sr.point >= 1}">
+                                                    <div class="stars">
+                                                        <form>
+                                                            <input class="fas fa-star star-5" id="star-5" type="radio" name="star" disabled /> <label class="fas fa-star" for="star-5"></label> <input class="fas fa-star star-4" id="star-4" type="radio"
+                                                                name="star" disabled /> <label class="fas fa-star" for="star-4"></label> <input class="fas fa-star star-3" id="star-3" type="radio" name="star" disabled /> <label class="fas fa-star" for="star-3"></label>                                                            <input class="fas fa-star star-2" id="star-2" type="radio" name="star" disabled /> <label class="fas fa-star" for="star-2"></label> <input class="fas fa-star star-1" id="star-1" type="radio"
+                                                                name="star" disabled checked />
+                                                            <label class="fas fa-star" for="star-1"></label>
+                                                        </form>
+                                                    </div>
+                                                </td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2"><img th:alt="${sr.image}" th:src="@{'/getimage/' + ${sr.id} + '/rate'}" height="60px" width="60px"></td>
+                                            </tr>
+                                            <tr>
+                                                <td colspan="2" class="font-italic" th:text="${sr.reason}"></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-6 card-postingdetail-rating" ng-if="postingdetail.posting.user != null">
+                        <i class="fad fa-user"></i>
+                    </div>
+                    <div class="col-6 card-postingdetail-rating" ng-if="postingdetail.posting.shop != null">
+                        <i class="fad fa-store"></i>
+                    </div>
+                    <div class="col-6 card-postingdetail-rating" style="border-left: 1px solid gray;">
+                        <div class="stars">
+                            <form th:object="${rateDTO}" th:each="sr : ${showRate}" method="POST">
+                                <div th:if="${sr.point == 5}">
+                                    <input class="fas fa-star star-5" id="star-5" type="radio" name="star" disabled checked /> <label class="fas fa-star" for="star-5"></label> <input class="fas fa-star star-4" id="star-4" type="radio" name="star" disabled
+                                    />
+                                    <label class="fas fa-star" for="star-4"></label> <input class="fas fa-star star-3" id="star-3" type="radio" name="star" disabled /> <label class="fas fa-star" for="star-3"></label> <input class="fas fa-star star-2"
+                                        id="star-2" type="radio" name="star" disabled /> <label class="fas fa-star" for="star-2"></label> <input class="fas fa-star star-1" id="star-1" type="radio" name="star" disabled />
+                                    <label class="fas fa-star" for="star-1"></label>
+                                </div>
+                                <div th:if="${sr.point < 5 && sr.point >= 4}">
+                                    <input class="fas fa-star star-5" id="star-5" type="radio" name="star" disabled />
+                                    <label class="fas fa-star" for="star-5"></label> <input class="fas fa-star star-4" id="star-4" type="radio" name="star" disabled checked /> <label class="fas fa-star" for="star-4"></label> <input class="fas fa-star star-3"
+                                        id="star-3" type="radio" name="star" disabled /> <label class="fas fa-star" for="star-3"></label> <input class="fas fa-star star-2" id="star-2" type="radio" name="star" disabled /> <label class="fas fa-star" for="star-2"></label>                                    <input class="fas fa-star star-1" id="star-1" type="radio" name="star" disabled />
+                                    <label class="fas fa-star" for="star-1"></label>
+                                </div>
+                                <div th:if="${sr.point < 4 && sr.point >= 3}">
+                                    <input class="fas fa-star star-5" id="star-5" type="radio" name="star" disabled />
+                                    <label class="fas fa-star" for="star-5"></label> <input class="fas fa-star star-4" id="star-4" type="radio" name="star" disabled /> <label class="fas fa-star" for="star-4"></label> <input class="fas fa-star star-3"
+                                        id="star-3" type="radio" name="star" disabled checked /> <label class="fas fa-star" for="star-3"></label>
+                                    <input class="fas fa-star star-2" id="star-2" type="radio" name="star" disabled />
+                                    <label class="fas fa-star" for="star-2"></label> <input class="fas fa-star star-1" id="star-1" type="radio" name="star" disabled /> <label class="fas fa-star" for="star-1"></label>
+                                </div>
+                                <div th:if="${sr.point < 3 && sr.point >= 2}">
+                                    <input class="fas fa-star star-5" id="star-5" type="radio" name="star" disabled />
+                                    <label class="fas fa-star" for="star-5"></label> <input class="fas fa-star star-4" id="star-4" type="radio" name="star" disabled /> <label class="fas fa-star" for="star-4"></label> <input class="fas fa-star star-3"
+                                        id="star-3" type="radio" name="star" disabled /> <label class="fas fa-star" for="star-3"></label> <input class="fas fa-star star-2" id="star-2" type="radio" name="star" disabled checked /> <label class="fas fa-star"
+                                        for="star-2"></label> <input class="fas fa-star star-1" id="star-1" type="radio" name="star" disabled />
+                                    <label class="fas fa-star" for="star-1"></label>
+                                </div>
+                                <div th:if="${sr.point < 2 && sr.point >= 1}">
+                                    <input class="fas fa-star star-5" id="star-5" type="radio" name="star" disabled />
+                                    <label class="fas fa-star" for="star-5"></label> <input class="fas fa-star star-4" id="star-4" type="radio" name="star" disabled /> <label class="fas fa-star" for="star-4"></label> <input class="fas fa-star star-3"
+                                        id="star-3" type="radio" name="star" disabled /> <label class="fas fa-star" for="star-3"></label> <input class="fas fa-star star-2" id="star-2" type="radio" name="star" disabled />
+                                    <label class="fas fa-star" for="star-2"></label> <input class="fas fa-star star-1" id="star-1" type="radio" name="star" disabled checked /> <label class="fas fa-star" for="star-1"></label>
+                                </div>
+                                <div th:if="${sr.point == 0}">
+                                    <input class="fas fa-star star-5" id="star-5" type="radio" name="star" disabled />
+                                    <label class="fas fa-star" for="star-5"></label> <input class="fas fa-star star-4" id="star-4" type="radio" name="star" disabled /> <label class="fas fa-star" for="star-4"></label> <input class="fas fa-star star-3"
+                                        id="star-3" type="radio" name="star" disabled /> <label class="fas fa-star" for="star-3"></label> <input class="fas fa-star star-2" id="star-2" type="radio" name="star" disabled />
+                                    <label class="fas fa-star" for="star-2"></label> <input class="fas fa-star star-1" id="star-1" type="radio" name="star" disabled /> <label class="fas fa-star" for="star-1"></label>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <hr>
+                <div class="row card-postingdetail-phone">
+                    <button ng-if="postingdetail.posting.user != null">
+                        <i class="fad fa-phone"></i> Số điện thoại :
+                        <strong>{{postingdetail.posting.user.phone}}</strong>
+                    </button>
+                    <button ng-if="postingdetail.posting.shop != null">
+                        <i class="fad fa-phone"></i> Số điện thoại :
+                        <strong>{{postingdetail.posting.shop.phone}}</strong>
+                    </button>
+                </div>
+                <div class="row card-postingdetail-phone">
+                    <button ng-if="postingdetail.posting.shop != null">
+                    <a  th:href="@{chatshop/{{postingdetail.posting.shop.id}}}">
+                        <i class="fad fa-comments-alt"></i> Chat với người bán
+                    </a>
+                    </button>
+                    <button ng-if="postingdetail.posting.user != null">
+                    <a  th:href="@{chatuser/{{postingdetail.posting.user.id}}}">
+                        <i class="fad fa-comments-alt"></i> Chat với người bán
+                    </a>
+                    </button>
+                </div>
+            </aside>
+        </div>
+        <div class="bbb_viewed row mt-4 pt-4">
+            <div class="col">
+                <div class="bbb_main_container">
+                    <div class="bbb_viewed_title_container">
+                        <h4 class="bbb_viewed_title text-center">SẢN PHẨM TƯƠNG TỰ</h4>
+                    </div>
+                    <data-owl-carousel class="owl-carousel owl-theme" data-options="{navigation: false, pagination: true, rewindNav : false}">
+                        <div owl-carousel-item="" ng-repeat="item in postings" class="item">
+                            <div class="owl-item mt-2 col-12">
+                                <div class="bbb_viewed_item discount d-flex flex-column align-items-center 
+		                                justify-content-center text-center" ng-click="goPostingDetail(item.postings[0].id)" style="cursor: pointer;">
+                                    <div class="bbb_viewed_image"><img ng-src="getimage1/{{item.postings[0].id}}" alt="{{item.postings[0].picture1}}" width="150px" height="150px"></div>
+                                    <div class="bbb_viewed_content text-center">
+                                        <div class="bbb_viewed_price font-weight-bold">
+                                            {{item.postings[0].price | currency : "" : 0}} đ</div>
+                                        <div class="bbb_viewed_name ellipsis-2">{{item.postings[0].title}}</div>
+                                        <div class="text-muted mt-3 ellipsis-1" style="font-size: 11px;">
+                                            {{item.postings[0].address}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </data-owl-carousel>
+                    <div class="owl-controls">
+                        <div class="owl-pagination">
+                            <div class="owl-page active"><span class=""></span></div>
+                            <div class="owl-page"><span class=""></span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bbb_viewed row mt-4">
+            <div class="col">
+                <div class="bbb_main_container">
+                    <div class="bbb_viewed_title_container">
+                        <h4 class="bbb_viewed_title text-center">SẢN PHẨM CỦA CỬA HÀNG</h4>
+                    </div>
+                    <data-owl-carousel class="owl-carousel owl-theme" data-options="{navigation: false, pagination: true, rewindNav : false}">
+                        <div owl-carousel-item="" ng-repeat="item in postingsByUser" class="item">
+                            <div class="owl-item mt-2 col-12">
+                                <div class="bbb_viewed_item discount d-flex flex-column align-items-center 
+		                                justify-content-center text-center" ng-click="goPostingDetail(item.postings[0].id)" style="cursor: pointer;">
+                                    <div class="bbb_viewed_image"><img ng-src="getimage1/{{item.postings[0].id}}" alt="{{item.postings[0].picture1}}" width="150px" height="150px"></div>
+                                    <div class="bbb_viewed_content text-center">
+                                        <div class="bbb_viewed_price font-weight-bold">
+                                            {{item.postings[0].price | currency : "" : 0}} đ</div>
+                                        <div class="bbb_viewed_name ellipsis-2">{{item.postings[0].title}}</div>
+                                        <div class="text-muted mt-3 ellipsis-1" style="font-size: 11px;">
+                                            {{item.postings[0].address}}</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </data-owl-carousel>
+                    <div class="owl-controls">
+                        <div class="owl-pagination">
+                            <div class="owl-page active"><span class=""></span></div>
+                            <div class="owl-page"><span class=""></span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add fancyBox main JS and CSS files -->
+        <script script type="text/javascript" src="https://fancyapps.com/fancybox/source/jquery.fancybox.pack.js?v=2.1.5">
+        </script>
+        <link rel="stylesheet" type="text/css" href="https://fancyapps.com/fancybox/source/jquery.fancybox.css?v=2.1.5" media="screen" />
+
+</body>
+
+</html>

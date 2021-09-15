@@ -1,0 +1,218 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{layouts/admin.html}">
+
+<head>
+<title>Spring Boot WebSocket Chat Application | CalliCoder</title>
+<link rel="stylesheet" href="/css/chat.css" />
+    <style>
+        .btn-collapsed-icon {
+            border: solid #222;
+            border-width: 0 1px 1px 0;
+            display: inline;
+            cursor: pointer;
+            padding: 3px;
+            position: absolute;
+            right: 0;
+        }
+
+        .card-category a.btn.collapsed h6 {
+            transform: rotate(40deg);
+            -webkit-transform: rotate(40deg);
+            transition: 0.3s transform ease-in-out;
+        }
+
+        .card-category a.btn h6 {
+            transform: rotate(-140deg);
+            -webkit-transform: rotate(-140deg);
+            transition: 0.3s transform ease-in-out;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container-fluid mb-5" ng-app="myApp" layout:fragment="content">
+        <div class="row col-12" ng-controller="posting">
+            <div class="col-12 text-center">
+                <h2 class="text-uppercase">Trò chuyện</h2>
+                <h5 class="text-muted">Trao đổi thông tin giữa người mua và người bán!</h5>
+                <hr />
+            </div>
+            <div class="col-md-3 col-12 accordion" id="accordionExample" style="font-size: 12px">
+            	<h5 class="text-center font-weight-bold">Danh sách các cuộc trò chuyện</h5>
+               
+         	<ul >
+	<li th:each="a : ${listchatshop}">
+  <a  th:href="@{'/chatshop/' + ${a[1]}}">
+                        <i class="fad fa-comments-alt"></i> Chat voi <p th:text="${a[2]}"></p>
+                    </a>
+
+</li>
+	<li th:each="a : ${listchatuser}">
+  <a  th:href="@{'/chatuser/' + ${a[1]}}">
+                        <i class="fad fa-comments-alt"></i> Chat voi <p th:text="${a[2]}"></p>
+                    </a>
+
+</li>
+	<li th:each="a : ${listchatuser2}">
+  <a  th:href="@{'/chatuser/' + ${a[1]}}">
+                        <i class="fad fa-comments-alt"></i> Chat voi <p th:text="${a[2]}"></p>
+                    </a>
+
+</li>
+	<li th:each="a : ${listchatshop2}">
+  <a  th:href="@{'/chatshop/' + ${a[1]}}">
+                        <i class="fad fa-comments-alt"></i> Chat voi <p th:text="${a[2]}"></p>
+                    </a>
+
+</li>
+<hr>
+			</ul>
+               
+            </div>
+            <div class="col-md-9 col-12">
+  <noscript>
+		<h2>Sorry! Your browser doesn't support Javascript</h2>
+	</noscript>
+
+	<div id="username-page" th:if="${userLogin} != null">
+		<div class="username-page-container">
+			<form id="usernameForm" name="usernameForm">
+			<h1>Có phải bạn muốn chat với shop</h1>
+
+<div th:each="item1 : ${user}">
+<div>
+<div class="form-group">
+					<input type="hidden" id="name12" th:value="${user.fullname}" placeholder="Username"
+						autocomplete="off" class="form-control" />
+				</div>
+				<div class="form-group">
+					<input type="hidden" id="id12" th:value="${user.id}" placeholder="Username"
+						autocomplete="off" class="form-control" />
+				</div>
+</div>
+</div>
+
+<div th:each="item : ${shop}">
+<div>
+<p th:value="${item.id}"></p>
+<div th:if="${mes != null}">
+	<div class="form-group">
+					<input type="hidden" id="name" th:value="${item.shopname}" placeholder="Username"
+						autocomplete="off" class="form-control" readonly/>
+				</div>
+	</div>
+<div th:if="${userc != null}">
+	<div class="form-group">
+					<input type="hidden" id="name" th:value="${item.fullname}" placeholder="Username"
+						autocomplete="off" class="form-control" readonly/>
+				</div>
+	</div>
+ <button type="submit"  class="accent username-submit">Chat with Shop</button>
+</div>
+</div>
+			
+			</form>
+		</div>
+	</div>
+
+
+
+
+
+
+
+	<div id="username-page" th:if="${shopLogin} != null">
+		<div class="username-page-container">
+			<form id="usernameForm" name="usernameForm">
+			<h1>Có phải bạn muốn chat với shop</h1>
+
+<div th:each="item1 : ${shop}">
+<div>
+<div class="form-group">
+					<input type="hidden" id="name12" th:value="${shop.shopname}" placeholder="Username"
+						autocomplete="off" class="form-control" />
+				</div>
+				<div class="form-group">
+					<input type="hidden" id="id12" th:value="${shop.id}" placeholder="Username"
+						autocomplete="off" class="form-control" />
+				</div>
+</div>
+</div>
+
+<div th:each="item : ${user}">
+<div>
+<p th:value="${item.id}"></p>
+<div th:if="${mes != null}">
+	<div class="form-group">
+					<input type="hidden" id="name" th:value="${item.fullname}" placeholder="Username"
+						autocomplete="off" class="form-control" readonly/>
+				</div>
+	</div>
+<div th:if="${shopc != null}">
+	<div class="form-group">
+					<input type="hidden" id="name" th:value="${item.shopname}" placeholder="Username"
+						autocomplete="off" class="form-control" readonly/>
+				</div>
+	</div>
+ <button type="submit"  class="accent username-submit">Chat with Shop</button>
+</div>
+</div>
+
+			
+			</form>
+		</div>
+	</div>
+
+	<div id="chat-page" class="hidden">
+		<div class="chat-container">
+			<div class="chat-header">
+				<h2 id="name1">Nói chuyện với </h2>
+			</div>
+			<div class="connecting">Connecting...</div>
+	<ul id="messageArea" >
+	<li class="chat-message" th:each="a : ${arrays}">
+	<div th:if="${mes != null}">
+	<i  th:each="u : ${user}"> <img th:if="${u.fullname}==${a[0]}"  th:src="@{'/getimage/' + *{u.id}}"></i>
+	<i  th:each="s : ${shop}"> <img th:if="${s.shopname}==${a[0]}" th:src="@{'/getimage/' + *{s.id}}"> </i>
+	</div>
+	<div th:if="${shopc != null}">
+	<i  th:each="s : ${shop}"> <img th:if="${s.shopname}==${a[0]}" th:src="@{'/getimage/' + *{s.id}}"> </i>
+	<i  th:each="s : ${user}"> <img th:if="${s.shopname}==${a[0]}" th:src="@{'/getimage/' + *{s.id}}"> </i>
+	</div>
+	<div th:if="${userc != null}">
+	<i  th:each="u : ${user}"> <img th:if="${u.fullname}==${a[0]}"  th:src="@{'/getimage/' + *{u.id}}"></i>
+	<i  th:each="u : ${shop}"> <img th:if="${u.fullname}==${a[0]}"  th:src="@{'/getimage/' + *{u.id}}"></i>
+	</div>
+	
+<span th:text="${a[0]}"></span>
+<p th:text="${a[1]}"></p>
+</li>
+			</ul>
+			<form th:action="@{/savechat}" method="post" th:object="${chatbox}" id="messageForm" name="messageForm" nameForm="messageForm" >
+				<div class="form-group">
+					<div class="input-group clearfix">
+						<input type="text" id="message" placeholder="Type a message..."
+							autocomplete="off" class="form-control" />
+						<button type="submit" class="primary">Send</button>
+						
+						
+					</div>
+				</div>
+			</form>
+		</div>
+	</div>
+            </div>
+        </div>
+        	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/sockjs-client/1.1.4/sockjs.min.js"></script>
+	<script
+		src="https://cdnjs.cloudflare.com/ajax/libs/stomp.js/2.3.3/stomp.min.js"></script>
+	<script src="/js/chat.js"></script>
+    </div>
+
+    
+</body>
+
+</html>

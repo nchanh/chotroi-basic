@@ -1,0 +1,31 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/admin.html}">
+<head>
+</head>
+<body>
+
+    <!-- content -->
+    
+	<div class="container-fluid col-sm-12 col-md-9 active-container" layout:fragment="content">
+        <span class="active-title">Xác thực email tài khoản của bạn</span>
+        <hr>
+        <div class="active-content mt-3 ml-4">
+            <span>Xác thực email của bạn để được đảm bảo quyền lợi và sự hỗ trợ tốt nhất từ Chợ Trời.<br>Để xác thực
+                email bẩm nút Nhận email xác thực dưới đây, sau đó đăng nhập email <span>email</span> và làm theo hướng
+                dẫn trong email.<br>Trường hợp không nhận được email, bạn vui lòng bấm nút Nhận email xác thực dưới
+                đây.</span>
+            <form th:action="@{/send-active}" class="mt-3 mb-4">
+                <button class="btn btn-outline-warning text-dark">
+                	<i class="far fa-envelope"></i> Nhận email xác nhận 
+                	<i th:if="${iconSuccess != null}" class="fad fa-check-circle text-success" style="font-size: 15px;"></i>
+                </button>
+            </form>
+            <span>Mọi thắc mắc vui lòng liên hệ bộ phận CSKH của Chợ Trời:<br>- Điện thoại: <a href="">0123456789</a><br>- Email: <a href="">chotroi@gmail.com</a></span>
+        </div>
+    </div>
+
+	 
+</body>
+
+</html>

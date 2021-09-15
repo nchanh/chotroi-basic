@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/admin.html}">
+<head>
+</head>
+<body>
+	<div class="background-login" layout:fragment="content">
+		<div class="modal fade" id="myModal" role="dialog">
+		    <div class="modal-dialog">
+		      Modal content
+		      <div class="modal-content">
+		        <div class="modal-header">
+		          <h4 class="modal-title">Modal Methods <button type="button" class="btn btn-info btn-md" id="myBtn">Hide
+		              Modal</button></h4>
+		        </div>
+		        <div class="modal-body">
+		          <i class="far fa-check-circle"></i>
+		          <p>The <strong>show</strong> method shows the modal and the <strong>hide</strong> method hides the modal.
+		          </p>
+		        </div>
+		      </div>
+		    </div>
+		  </div>
+		<div class="container-fluid login-container"><img src="/images/choTroi2.png" alt="choTroi2" class="login-image">
+			<span class="sub-title-login">Website Chuyên Mua Bán, Trao Đổi Đồ Cũ</span>
+			<div class="row card-login justify-content-lg-end justify-content-sm-center">
+				<div class="col-md-5 col-sm-12 col-xs-12 card-login-container">
+					<h2 class="title-login my-4">ĐĂNG NHẬP TÀI KHOẢN</h2>
+					<div class="w3-container">
+						<div th:if="${messageComplete != null}">
+							<h5 th:text="${messageComplete}" class="alert alert-success text-center"></h5>
+						</div>
+						<div th:if="${message != null}">
+							<h5 th:text="${message}" class="alert alert-danger text-center"></h5>
+						</div>
+						<form class="form-group" th:action="@{/signin}" th:object="${userLoginDTO}" method="post">
+							<div class="form-group"><label for="name">Tài khoản:</label> <input type="text" class="form-control mr-5"
+								th:field="*{username}" placeholder="Tài khoản"></div>
+							<div class="form-group"><label for="password">Mật khẩu:</label> <input type="password"
+								class="form-control mr-5" th:field="*{password}" placeholder="Mật khẩu"></div>
+							<div class="form-group text-center mt-4">
+								<button class="btn my-2 my-sm-0 button-login" type="submit">Đăng Nhập</button>
+							</div>
+							<div class="form-group text-center button-login-other"><a th:href="@{/forgot-password}">Quên mật khẩu?</a><br>
+								<span>Bạn chưa có tài khoản?</span> <a th:href="@{/signup}">Đăng ký</a></div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		  <script type="text/javascript" src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js">
+			$(document).ready(function () {
+				
+			    // Show the Modal on load
+			    $('#myModal').modal('show');
+			
+			    // Hide the Modal
+			    $("#myBtn").click(function () {
+			      $("#myModal").modal("hide");
+			    });
+			  });
+			</script>
+	</div>
+	
+
+
+	
+</body>
+
+</html>

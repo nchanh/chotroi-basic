@@ -1,0 +1,166 @@
+[
+  {
+    "Id": "DDTU",
+    "Name": "Đồ điện tử",
+    "catalogDetails": [
+      { "id": "DT","url":"#!dienthoai", "name": "Điện thoại"
+       },
+      { "id": 2, "name": "Máy tính bảng"},
+      { "id": 3, "name": "Sim thẻ" },
+      { "id": 4, "name": "Máy đọc sách" },
+      { "id": 5, "name": "Máy tính bàn, máy chủ" },
+      { "id": 6, "name": "Linh kiện, phụ kiện di động" },
+      { "id": 7, "name": "Linh kiện, thiết bị ngoại vi, máy tính" },
+      { "id": 8, "name": "Máy ảnh" },
+      { "id": 9, "name": "Ống kính" },
+      { "id": 10, "name": "Thiết bị văn phòng" },
+      { "id": 11, "name": "Thiết bị lưu trữ" },
+      { "id": 12, "name": "Thiết bị chơi game" },
+      { "id": "LAPTOP","url":"#!laptop", "name": "Laptop" },
+      { "id": 14, "name": "Phụ kiện máy ảnh" },
+      { "id": 15, "name": "Máy quay" },
+      { "id": 16, "name": "Smartwatch" }
+    ],
+    "Logo": "DDTU.jpg"
+  },
+  {
+    "Id": "TBNN",
+    "Name": "Thiết bị nghe nhìn",
+    "catalogDetails": [
+      { "id": 1, "name": "TV, màn chiếu" },
+      { "id": 2, "name": "Máy chiếu" },
+      { "id": 3, "name": "Máy nghe nhạc" },
+      { "id": 4, "name": "Tai nghe" },
+      { "id": 5, "name": "Đầu đĩa, đầu thu" },
+      { "id": 6, "name": "Linh kiện, phụ kiện di động" },
+      { "id": 7, "name": "Linh kiện, thiết bị ngoại vi, máy tính" },
+      { "id": 8, "name": "Máy ảnh" },
+      { "id": 9, "name": "Ống kính" },
+      { "id": 10, "name": "Thiết bị văn phòng" },
+      { "id": 11, "name": "Thiết bị lưu trữ" },
+      { "id": 12, "name": "Thiết bị chơi game" },
+      { "id": 13, "name": "Laptop" },
+      { "id": 14, "name": "Phụ kiện máy ảnh" },
+      { "id": 15, "name": "Máy quay" },
+      { "id": 16, "name": "Smartwatch" }
+    ],
+    "Logo": "TBNN.jpg"
+  },
+  {
+    "Id": "DOGD",
+    "Name": "Đồ gia dụng",
+    "catalogDetails": [
+      { "id": 1, "name": "Tủ lạnh" },
+      { "id": 2, "name": "Máy giặt" },
+      { "id": 3, "name": "Lò vi sóng, lò nướng" },
+      { "id": 4, "name": "Máy hút bụi" },
+      { "id": 5, "name": "Quạt" },
+      { "id": 6, "name": "Điều hòa không khí" },
+      { "id": 7, "name": "Máy sưởi, máy hút ẩm" },
+      { "id": 8, "name": "Máy lọc nước" },
+      { "id": 9, "name": "Máy sấy, bàn ủi" },
+      { "id": 10, "name": "Nồi cơm điện" },
+      { "id": 11, "name": "Bình nóng lạnh" },
+      { "id": 12, "name": "Bếp nấu" },
+      { "id": 13, "name": "Máy say, máy trộn" },
+      { "id": 14, "name": "Dụng cụ làm bếp, nồi niêu" },
+      { "id": 15, "name": "Thiết bị chiếu sáng" },
+      { "id": 16, "name": "Đồ gia dụng khác" },
+      { "id": 17, "name": "Mẹ và bé" }
+    ],
+    "Logo": "DOGD.jpg"
+  },
+  {
+    "Id": "XECO",
+    "Name": "Xe cộ",
+    "catalogDetails": [
+      { "id": 1, "name": "Ô tô" },
+      { "id": 2, "name": "Xe máy" },
+      { "id": 3, "name": "Xe đạp" },
+      { "id": 4, "name": "Phụ tùng, đồ bảo hộ" },
+      { "id": 5, "name": "Xe chuyên dụng" },
+      { "id": 6, "name": "Xe máy điện" }
+    ],
+    "Logo": "XECO.jpg"
+  },
+  {
+    "Id": "TTPK",
+    "Name": "Thời trang, phụ kiện",
+    "catalogDetails": [
+      { "id": 1, "name": "Thời trang nữ" },
+      { "id": 2, "name": "Giày dép nữ" },
+      { "id": 3, "name": "Phụ kiện nữ" },
+      { "id": 4, "name": "THời trang nam" },
+      { "id": 5, "name": "Giày dép nam" },
+      { "id": 6, "name": "Phụ kiện nam" },
+      { "id": 7, "name": "Mỹ phẩm - làm đẹp" }
+    ],
+    "Logo": "TTPK.png"
+  },
+  {
+    "Id": "NNTH",
+    "Name": "Nội ngoại thất",
+    "catalogDetails": [
+      { "id": 1, "name": "Ngoại thất sân vườn" },
+      { "id": 2, "name": "Nội thất phòng khách" },
+      { "id": 3, "name": "Nội thất phòng bếp" },
+      { "id": 4, "name": "Nội thất phòng tăm" },
+      { "id": 5, "name": "Nội thất phòng ngủ" },
+      { "id": 6, "name": "Nội thất văn phòng, cửa hàng" }
+    ],
+    "Logo": "NNTH.jpg"
+  },
+  {
+    "Id": "VNCC",
+    "Name": "Vật nuôi, cây cảnh",
+    "catalogDetails": [
+      { "id": 1, "name": "Chó" },
+      { "id": 2, "name": "Mèo" },
+      { "id": 3, "name": "Chim cảnh" },
+      { "id": 4, "name": "Cá cảnh" },
+      { "id": 5, "name": "Vật nuôi khác" },
+      { "id": 6, "name": "Cây cảnh" },
+      { "id": 7, "name": "Phụ kiện vật nuôi" }
+    ],
+    "Logo": "VNCC.png"
+  },
+  {
+    "Id": "THTH",
+    "Name": "Thể thao",
+    "catalogDetails": [
+      { "id": 1, "name": "Máy tập thể thao" },
+      { "id": 2, "name": "Golf" },
+      { "id": 3, "name": "Cầu lông" },
+      { "id": 4, "name": "Bóng bàn" },
+      { "id": 5, "name": "Tennis" },
+      { "id": 6, "name": "Bóng đá" },
+      { "id": 7, "name": "Bơi lội" },
+      { "id": 8, "name": "Môn thể thao khác" }
+    ],
+    "Logo": "THTH.png"
+  },
+  {
+    "Id": "SBNT",
+    "Name": "Sách báo, nghệ thuật",
+    "catalogDetails": [
+      { "id": 1, "name": "sách, truyện chữ" },
+      { "id": 2, "name": "Truyện tranh, tạp chí" },
+      { "id": 3, "name": "Đồ sưu tập" },
+      { "id": 4, "name": "Nhạc cụ" },
+      { "id": 5, "name": "Văn phòng phẩm" }
+    ],
+    "Logo": "SBNT.png"
+  },
+  {
+    "Id": "MMCD",
+    "Name": "Máy móc chuyên dụng",
+    "catalogDetails": [
+      { "id": 1, "name": "Máy phát điện" },
+      { "id": 2, "name": "Máy bơm nước" },
+      { "id": 3, "name": "Dụng cụ sửa chữa" },
+      { "id": 4, "name": "Thiết bị an ninh" },
+      { "id": 5, "name": "Thiết bị y tế" }
+    ],
+    "Logo": "MMCD.jpg"
+  }
+]

@@ -1,0 +1,494 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{layouts/admin.html}">
+
+<head>
+    <link rel="stylesheet" href="/css/pagination.css" />
+    <script type="text/javascript">
+        function getProduct(value) {
+            document.getElementById("productId").value = value;
+        }
+
+        function previewFile(input) {
+            var file1 = document.getElementById("uploadPicture1");
+            var file2 = document.getElementById("uploadPicture2");
+            var file3 = document.getElementById("uploadPicture3");
+            var file4 = document.getElementById("uploadPicture4");
+
+            if (file1.value != "") {
+                file1.style.display = "none";
+                file2.style.display = "block";
+            }
+            if (file2.value != "") {
+                file2.style.display = "none";
+                file3.style.display = "block";
+            }
+            if (file3.value != "") {
+                file3.style.display = "none";
+                file4.style.display = "block";
+            }
+            if (file4.value != "") {
+                file4.style.display = "none";
+            }
+
+            const [file] = input.files;
+            const preview = document.getElementById("preview");
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                const img = document.createElement("img");
+                img.src = e.target.result;
+                img.width = 150;
+                img.height = 150;
+                img.alt = "file";
+
+                preview.appendChild(img);
+            };
+
+            reader.readAsDataURL(file);
+        }
+    </script>
+</head>
+
+<body ng-app="myApp">
+    <div class="container-fluid mb-5 mt-4" layout:fragment="content" ng-controller="profileCtrl">
+        <input type="text" value="" name="usernameLogin" th:if="${user} == null" style="display: none" />
+        <input type="text" th:value="*{user.username}" name="usernameLogin" th:if="${user} != null" style="display: none" />
+        <div class="thongtin">
+            <div class="row">
+                <div class="col-sm-6" style="border-right: solid rgb(224, 207, 207) 1px">
+                    <div class="row">
+                        <div class="khunnguser col-3 pl-4" ng-if="postings[0].user != null">
+                            <img ng-src="/getimage/{{postings[0].user.username}}/username" class="img-thumbnail" />
+                        </div>
+                        <div class="khunnguser col-3 pl-4" ng-if="postings[0].shop != null">
+                            <img ng-src="/getimage/{{postings[0].shop.username}}/username" class="img-thumbnail" />
+                        </div>
+                        <div class="col-9">
+                            <div id="textname" ng-if="postings[0].user != null">
+                                <h5>{{postings[0].user.fullname}}</h5>
+                            </div>
+                            <div id="textname" ng-if="postings[0].shop != null">
+                                <h5>{{postings[0].shop.shopname}}</h5>
+                            </div>
+                            <!-- <div class="row">
+                                <div class="col-6">
+                                    5 người theo dõi
+                                </div>
+                                <div class="col-6">
+                                    3 đang theo dõi
+                                </div>
+                            </div> -->
+                            <div class="row">
+                                <div class="nhomnut">
+                                    <!-- <button class="nuttheodoi"><i class="fas fa-plus-circle"></i> Theo dõi</button> -->
+                                    <button class="nuttheodoi">
+                                        <i class="fas fa-flag"> Báo cáo</i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-sm-6">
+                    <div class="textdanhgia">
+                        <div class="row" style="padding-left: 14px">
+                            <p class="textdanhgia1">
+                                <i class="fas fa-star"></i> Đánh giá:
+                            </p>
+                            <p class="textdanhgia2">Chưa có đánh giá</p>
+                        </div>
+                        <div class="row" style="padding-left: 14px">
+                            <p class="textdanhgia1">
+                                <i class="fad fa-phone"></i> Số điện thoại:
+                            </p>
+                            <p class="textdanhgia2" ng-if="postings[0].user != null">
+                                {{postings[0].user.phone}}
+                            </p>
+                            <p class="textdanhgia2" ng-if="postings[0].shop != null">
+                                {{postings[0].shop.phone}}
+                            </p>
+                        </div>
+                        <div class="row" style="padding-left: 14px">
+                            <p class="textdanhgia1">
+                                <i class="fad fa-mailbox"></i> Email:
+                            </p>
+                            <p class="textdanhgia2" ng-if="postings[0].user != null">
+                                {{postings[0].user.email}}
+                            </p>
+                            <p class="textdanhgia2" ng-if="postings[0].shop != null">
+                                {{postings[0].shop.email}}
+                            </p>
+                        </div>
+                        <div class="row" style="padding-left: 14px">
+                            <p class="textdanhgia1">
+                                <i class="fas fa-map-marker-alt"></i> Địa chỉ:
+                            </p>
+                            <p class="textdanhgia2" ng-if="postings[0].user != null">
+                                {{postings[0].user.address}}
+                            </p>
+                            <p class="textdanhgia2" ng-if="postings[0].shop != null">
+                                {{postings[0].shop.address}}
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--/.Carousel Wrapper-->
+        <br />
+        <ul class="list-group p-2 mb-4 mt-3" style="background-color: #f5f0e1; border-radius: 2px">
+            <h5 class="ml-1" style="font-weight: bold">
+                Bản tin đã duyệt: {{postingsApproved.length}} bản tin
+            </h5>
+            <li class="list-group-item filtered-products-card-profile mb-2" ng-repeat="item in postingsApproved| limitTo:itemsPerPage0:itemsPerPage0*(currentPage0-1)" ng-click="goPostingDetail(item.postings[0].id)">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <img class="card-img-top mt-3" ng-src="/getimage1/{{item.postings[0].id}}" alt="Card image cap" height="120px" />
+                        </div>
+                        <div class="col-sm-10">
+                            <div class="card-body">
+                                <h5 class="text-body text-uppercase font-weight-bold ellipsis-1">
+                                    {{item.postings[0].title}}
+                                </h5>
+                                <h5 class="text-danger">
+                                    {{item.postings[0].price | currency : "" : 0}} đ
+                                </h5>
+                                <h5 class="font-italic text-muted mr-5 ellipsis-1">
+                                    {{item.postings[0].content}}
+                                </h5>
+                                <div class="text-muted mt-4" style="font-size: 90%">
+                                    <span>
+                                        <i class="fas fa-map-marker-alt"></i>&nbsp;
+                                        {{item.postings[0].address}} </span>&ensp;
+                                    <span>
+                                        <i class="fad fa-calendar-times"></i>&nbsp;
+                                        {{item.date | date : 'dd/MM/yyyy'}} </span>&ensp;
+                                    <span>
+                                        <i class="fas fa-user"></i>&nbsp;
+                                        {{item.postings[0].posting.user.fullname}}{{item.postings[0].posting.shop.shopname}}
+                                    </span>
+                                </div>
+                                <div class="text-right">
+                                    <button type="button" class="profile-button-check" data-toggle="modal" data-target="#approvedModal" title="Xác nhận đã bán" ng-click="postingSave()" ng-if="usernamePostingDetail == usernameLogin">
+                                        <i class="far fa-check"></i>
+                                    </button>
+                                    <button type="button" class="profile-button-update" title="Chỉnh sửa bản tin" data-toggle="modal" data-target="#updateInformation" ng-click="postingSave()">
+                                        <i class="fal fa-wrench"></i>
+                                    </button>
+                                    <div class="modal fade" id="approvedModal" tabindex="-1" aria-labelledby="approvedModalLabel" aria-hidden="true" style="cursor: context-menu">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <div class="modal-header">
+                                                    <h5 class="modal-title text-center" id="approvedModallLabel">
+                                                        Bạn đã bán sản phẩm '{{item.postings[0].title}}'?
+                                                    </h5>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-success" ng-click="updateStatusPosting(item.id)">
+                                                        Xác nhận
+                                                    </button>
+                                                    <button type="button" class="btn btn-danger" data-dismiss="modal">
+                                                        Đóng
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <ul class="d-flex justify-content-center pagination-sm" uib-pagination total-items="postingsApproved.length" items-per-page="3" ng-model="currentPage0" max-size="5" boundary-link-numbers="true"></ul>
+        </ul>
+        <ul class="list-group p-2 mb-4" style="background-color: #f5f0e1; border-radius: 2px" ng-if="usernamePostingDetail == usernameLogin">
+            <h5 class="ml-1" style="font-weight: bold">
+                Bản tin chưa duyệt: {{postingsUnapproved.length}} bản tin
+            </h5>
+            <li class="list-group-item filtered-products-card-profile mb-2" ng-repeat="item in postingsUnapproved| limitTo:itemsPerPage1:itemsPerPage1*(currentPage1-1)" ng-click="goPostingDetail(item.postings[0].id)">
+                <div class="container-fluid">
+                    <div class="row">
+                        <div class="col-sm-2">
+                            <img class="card-img-top mt-3" ng-src="/getimage1/{{item.postings[0].id}}" alt="Card image cap" height="120px" />
+                        </div>
+                        <div class="col-sm-10">
+                            <div class="card-body">
+                                <h5 class="text-body text-uppercase font-weight-bold ellipsis-1">
+                                    {{item.postings[0].title}}
+                                </h5>
+                                <h5 class="text-danger">
+                                    {{item.postings[0].price | currency : "" : 0}} đ
+                                </h5>
+                                <h5 class="font-italic text-muted mr-5 ellipsis-1">
+                                    {{item.postings[0].content}}
+                                </h5>
+                                <div class="text-muted mt-4" style="font-size: 90%">
+                                    <span>
+                                        <i class="fas fa-map-marker-alt"></i>&nbsp;
+                                        {{item.postings[0].address}} </span>&ensp;
+                                    <span>
+                                        <i class="fad fa-calendar-times"></i>&nbsp; {{item.date | date : 'dd/MM/yyyy'}}
+                                    </span>&ensp;
+                                    <span>
+                                        <i class="fas fa-user"></i>&nbsp;
+                                        {{item.postings[0].posting.user.fullname}}{{item.postings[0].posting.shop.shopname}}
+                                    </span>
+                                </div>
+                                <div class="text-right">
+                                    <button type="button" class="profile-button-update" title="Chỉnh sửa bản tin" data-toggle="modal" data-target="#updateInformation" ng-click="getPostingUpdate(item.id)">
+                                        <i class="fal fa-wrench"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </li>
+            <ul class="d-flex justify-content-center pagination-sm" uib-pagination total-items="postingsUnapproved.length" items-per-page="3" ng-model="currentPage1" max-size="5" boundary-link-numbers="true"></ul>
+        </ul>
+        <div class="list-group py-3 px-2 mb-4" style="background-color: #f5f0e1; border-radius: 2px">
+            <h5 class="ml-1" style="font-weight: bold">
+                Đã bán thành công: {{postingsSold.length}} bản tin
+            </h5>
+            <div ng-repeat="item in postingsSold | limitTo:itemsPerPage3:itemsPerPage3*(currentPage3-1)">
+                <button type="button" title="Xem chi tiết" data-toggle="modal" data-target="#showInformation" class="list-group-item list-group-item-action" ng-click="getPosting(item.id)">
+                    <span>{{item.postings[0].title}}</span>
+                </button>
+            </div>
+            <ul class="d-flex justify-content-center pagination-sm" uib-pagination total-items="postingsSold.length" items-per-page="3" ng-model="currentPage2" max-size="5" boundary-link-numbers="true" ng-change="pageChanged()"></ul>
+        </div>
+        <div class="list-group py-3 px-2" style="background-color: #f5f0e1; border-radius: 2px" ng-if="usernamePostingDetail == usernameLogin">
+            <h5 class="ml-1" style="font-weight: bold">
+                Đã bị khóa: {{postingsBlock.length}} bản tin
+            </h5>
+            <small class="text-muted ml-1">Hãy kiểm tra mail để xem lý do bản tin bị khóa!</small>
+            <div ng-repeat="item in postingsBlock | limitTo:itemsPerPage3:itemsPerPage3*(currentPage3-1)">
+                <button type="button" title="Xem chi tiết" data-toggle="modal" data-target="#showInformation" class="list-group-item list-group-item-action" ng-click="getPosting(item.id)">
+                    <span>{{item.postings[0].title}}</span>
+                </button>
+            </div>
+            <ul class="d-flex justify-content-center pagination-sm" uib-pagination total-items="postingsBlock.length" items-per-page="3" ng-model="currentPage3" max-size="5" boundary-link-numbers="true" ng-change="pageChanged()"></ul>
+        </div>
+
+        <!-- Modal show information -->
+        <div class="modal fade" id="showInformation" tabindex="-1" role="dialog" aria-labelledby="showInformationTitle" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title font-weight-bold" id="exampleModalLongTitle">
+                            Thông tin chi tiết bài đăng
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <!--Carousel Wrapper-->
+                        <div id="carousel-thumb" class="carousel slide carousel-fade carousel-thumbnails" data-ride="carousel">
+                            <!--Slides-->
+                            <div class="carousel-inner" role="listbox">
+                                <div class="carousel-item active" ng-if="postingShow.postings[0].picture1 != ''">
+                                    <img class="d-block w-100" ng-src="/getimage1/{{postingShow.postings[0].id}}" alt="First slide" width="450" height="350" />
+                                </div>
+                                <div class="carousel-item" ng-if="postingShow.postings[0].picture2 != ''">
+                                    <img class="d-block w-100" ng-src="/getimage2/{{postingShow.postings[0].id}}" alt="Second slide" width="450" height="350" />
+                                </div>
+                                <div class="carousel-item" ng-if="postingShow.postings[0].picture3 != ''">
+                                    <img class="d-block w-100" ng-src="/getimage3/{{postingShow.postings[0].id}}" alt="Third slide" width="450" height="350" />
+                                </div>
+                                <div class="carousel-item" ng-if="postingShow.postings[0].picture4 != ''">
+                                    <img class="d-block w-100" ng-src="/getimage4/{{postingShow.postings[0].id}}" alt="Third slide" width="450" height="350" />
+                                </div>
+                            </div>
+                            <!--/.Slides-->
+                            <!--Controls-->
+                            <a class="carousel-control-prev" href="#carousel-thumb" role="button" data-slide="prev" target="_self">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carousel-thumb" role="button" data-slide="next" target="_self">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+                        <!--/.Carousel Wrapper-->
+                        <div class="card-body text-left">
+                            <div class="form-group">
+                                <span><b>ID:</b> {{postingShow.postings[0].id}}</span>
+                            </div>
+                            <div class="form-group">
+                                <span><b>Tiêu đề:</b> {{postingShow.postings[0].title}}</span>
+                            </div>
+                            <div class="form-group">
+                                <span><b>Hãng sản phẩm:</b>
+                                    {{postingShow.postings[0].manufacturer}}</span>
+                            </div>
+                            <div class="form-group">
+                                <span><b>Loại sản phẩm:</b>
+                                    {{postingShow.postings[0].product_type}}</span>
+                            </div>
+                            <div class="form-group">
+                                <span><b>Nội dung mô tả:</b>
+                                    {{postingShow.postings[0].content}}</span>
+                            </div>
+                            <div class="form-group">
+                                <span><b>Giá cả:</b> {{postingShow.postings[0].price | currency : "" : 0}} đ</span>
+                            </div>
+                            <div class="form-group">
+                                <span><b>Địa chỉ:</b> {{postingShow.postings[0].address}}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-danger" data-dismiss="modal">
+                            Đóng
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Update information -->
+        <div class="modal fade" id="updateInformation" tabindex="-1" role="dialog" aria-labelledby="updateInformationTitle" aria-hidden="true">
+            <div class="modal-dialog modal-lg modal-dialog-centered" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title font-weight-bold" id="updateInformationTitle">
+                            Chỉnh sửa thông tin bài đăng
+                        </h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form th:action="@{/postingdetails/saveOrUpdate}" th:object="${postingDetailDto}" method="post" enctype="multipart/form-data">
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <label class="font-weight-bold">Nhu cầu:</label>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" th:name="postingType" name="typePosting" id="typePosting1" value="true" style="cursor: pointer" />
+                                    <label class="form-check-label" for="typePosting1" style="cursor: pointer">Muốn
+                                        mua</label>
+                                </div>
+                                <div class="form-check form-check-inline">
+                                    <input class="form-check-input" type="radio" th:name="postingType" name="typePosting" id="typePosting2" value="false" checked style="cursor: pointer" />
+                                    <label class="form-check-label" for="typePosting2" style="cursor: pointer">Muốn
+                                        bán</label>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="font-weight-bold">Danh mục:</label>
+                                <div class="form-group">
+                                    <input th:name="productName" type="text" class="form-control" ng-model="productName" name="" id="productId" placeholder="Danh mục" style="cursor: not-allowed;" readonly/>
+                                </div>
+                                <div class="form-group row">
+                                    <div class="col-sm-12 col-md-12 col-lg-6">
+                                        <select class="custom-select" ng-options="item.name for item in productsType" ng-model="productTypeSelect" ng-change="selectProductType()">
+                                            <option value="">Chọn danh mục</option>
+                                        </select>
+                                    </div>
+                                    <div class="col-sm-12 col-md-12 col-lg-6">
+                                        <select class="custom-select" ng-options="item.name for item in products" ng-model="productSelect" ng-change="selectProduct()">
+                                            <option value="">Chọn danh mục phụ</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="font-weight-bold">Tiêu đề:</label>
+                                <input th:field="*{title}" type="text" class="form-control" ng-model="postingShow.postings[0].title" name="" id="" maxlength="500" placeholder="Tiêu đề" />
+                                <small id="helpId" class="text-muted">Ví dụ: MacBook Pro 16 inch - Intel Core i9 8-Core
+                                    2.4GHz /
+                                    64GB
+                                    / 8TB / Radeon Pro 5500M 8GB - Space Gray</small>
+                            </div>
+                            <div class="form-group">
+                                <label class="font-weight-bold">Hãng sản xuất:</label>
+                                <input th:field="*{manufacturer}" type="text" class="form-control" ng-model="postingShow.postings[0].manufacturer" name="" id="" placeholder="Hãng sản xuất" />
+                                <small id="helpId" class="text-muted">Ví dụ: Apple, Samsung, Asus, HP,...</small>
+                            </div>
+                            <div class="form-group">
+                                <label class="font-weight-bold">Loại sản phẩm:</label>
+                                <input th:field="*{product_type}" type="text" class="form-control" ng-model="postingShow.postings[0].product_type" name="" id="" placeholder="Loại sản phẩm" />
+                                <small id="helpId" class="text-muted">Ví dụ: Mackbook Pro 16 inch, SAMSUNG Galaxy Book
+                                    Flex,
+                                    Laptop
+                                    Asus F571GT-BQ266T...</small>
+                            </div>
+                            <div class="form-group">
+                                <label class="font-weight-bold">Nội dung mô tả:</label>
+                                <textarea rows="5" th:field="*{content}" class="form-control" ng-model="postingShow.postings[0].content" name="" id="" placeholder="Nội dung mô tả"></textarea>
+                                <small id="helpId" class="text-muted">Ví dụ: CPU, Ram, GPU, Ổ cứng,...</small>
+                            </div>
+                            <div class="form-group" style="display: none">
+                                <label class="font-weight-bold">Giá cả:</label>
+                                <input th:field="*{price}" type="text" class="form-control" name="" id="" placeholder="Giá cả" />
+                            </div>
+                            <div class="form-group">
+                                <label class="font-weight-bold">Giá cả:</label>
+                                <input type="text" class="form-control money_format" ng-model="postingShow.postings[0].price" th:name="strPrice" placeholder="Giá cả" />
+                            </div>
+                            <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+                            <script type="text/javascript" src="/libs/simple.money.format.js"></script>
+                            <script type="text/javascript">
+                                $(".money_format").simpleMoneyFormat();
+                            </script>
+                            <label class="font-weight-bold">Địa chỉ:</label>
+                            <div class="form-group" style="display: none;">
+                                <input type="text" value="" th:field="*{address}" />
+                                <input type="text" value="{{xaSelect.name_with_type}}" th:name="addressPhuongXa" />
+                                <input type="text" value="{{huyenSelect.name_with_type}}" th:name="addressQuanHuyen" />
+                                <input type="text" value="{{tinhSelect.name_with_type}}" th:name="addressTinhThanhPho" />
+                            </div>
+                            <div class="form-group" ng-show="addressStatus == true">
+                                <input type="text" th:field="*{address}" class="form-control" ng-model="addressName" placeholder="Địa chỉ" style="cursor: not-allowed;" readonly/>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-sm-12 col-md-12 col-lg-4">
+                                    <select class="custom-select" ng-options="item.name_with_type for item in tinhs" ng-model="tinhSelect" ng-change="selectTinh()">
+                                        <option value="">Chọn tỉnh, thành phố</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-12 col-md-12 col-lg-4">
+                                    <select class="custom-select" ng-options="item.name_with_type for item in listQuanHuyen" ng-model="huyenSelect" ng-change="selectHuyen()">
+                                        <option value="">Chọn quận, huyện</option>
+                                    </select>
+                                </div>
+                                <div class="col-sm-12 col-md-12 col-lg-4">
+                                    <select class="custom-select" ng-options="item.name_with_type for item in listXa" ng-model="xaSelect">
+                                        <option value="">Chọn xã, phường</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="font-weight-bold">Hỉnh ảnh:</label>
+                                <div id="preview"></div>
+                                <input type="file" th:field="*{photo1}" class="form-control col-4" id="uploadPicture1" onchange="previewFile(this);" style="cursor: pointer; border: 0" />
+                                <input type="file" th:field="*{photo2}" class="form-control col-4" id="uploadPicture2" onchange="previewFile(this);" style="display: none; cursor: pointer; border: 0" />
+                                <input type="file" th:field="*{photo3}" class="form-control col-4" id="uploadPicture3" onchange="previewFile(this);" style="display: none; cursor: pointer; border: 0" />
+                                <input type="file" th:field="*{photo4}" class="form-control col-4" id="uploadPicture4" onchange="previewFile(this);" style="display: none; cursor: pointer; border: 0" />
+                                <small id="helpId" class="text-muted">Tải lên tối thiểu 3 hình ảnh và kích thước hình
+                                    ảnh
+                                    dưới 1MB.</small>
+                            </div>
+                            <div class="form-group text-center">
+                                <button type="submit" class="btn btn-primary rounded">
+                                    Đăng tin
+                                </button>
+                            </div>
+
+                        </div>
+                        <div class="modal-footer">
+                            <button type="submit" class="btn btn-primary">Cập nhật</button>
+                            <button type="button" class="btn btn-danger" data-dismiss="modal">
+                                Đóng
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

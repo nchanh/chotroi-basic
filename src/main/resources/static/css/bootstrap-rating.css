@@ -1,0 +1,42 @@
+div.stars {
+    width: 130px;
+    display: inline-block;
+}
+
+input.fas {
+    display: none;
+}
+
+label.fas {
+    float: right;
+    padding: 1px;
+    font-size: 20px;
+    color: #444;
+    transition: all .2s;
+}
+
+input.fas:checked~label.fas:before {
+    /* content: '\f005'; */
+    color: #FD4;
+    transition: all .25s;
+}
+
+input.star-5:checked~label.fas:before {
+    color: #FE7;
+    text-shadow: 0 0 20px #952;
+}
+
+input.star-1:checked~label.fas:before {
+    color: #F62;
+}
+
+
+/* label.fas:hover {
+    transform: rotate(-15deg) scale(1.3);
+} */
+
+
+/* label.fas:before {
+    content: '\f006';
+    font-family: FontAwesome;
+} */

@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html ng-app="myApp" lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <link rel="icon" href="/images/choTroi.ico" type="image/x-icon" />
+    <title>ADMIN | Website Rao Vặt Chợ Trời</title>
+
+    <!-- Bootstrap CSS CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/css/bootstrap.min.css" integrity="sha384-9gVQ4dYFwwWSjIDZnLEWnxCjeSWFphJiwGPXr1jddIhOegiu1FwO5qRGvFXOdJZ4" crossorigin="anonymous">
+
+    <!-- Our Custom CSS -->
+    <link rel="stylesheet" href="/css/admin.css">
+
+    <!-- Font Awesome JS -->
+    <link rel="stylesheet" href="libs/font-awesome-pro-5.15.1/css/all.css">
+    <script src="/libs/font-awesome-pro-5.15.1/js/pro.js"></script>
+
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="/css/pagination.css">
+
+    <!-- angularJs -->
+    <script src="/libs/angulars/angular.min.js"></script>
+    <script src="/libs/angulars/angular-route.js"></script>
+
+    <script src="/libs/ui-bootstrap-2.5.0/ui-bootstrap-2.5.0.js"></script>
+    <script src="/libs/ui-bootstrap-2.5.0/ui-bootstrap-tpls-2.5.0.js"></script>
+</head>
+
+<body>
+    <div class="wrapper">
+        <!-- Sidebar  -->
+        <div id="sidebar" class="sidebarCollapse">
+            <div class="sidebar-header text-center">
+                <h3>
+                    <a href="/">
+                        <img src="images/choTroi2.png" alt="chotroi" width="120px">
+                    </a>
+                </h3>
+                <strong>
+                    <a href="/">
+                        <img src="images/choTroi2.png" alt="chotroi" width="50px">
+                    </a>
+                </strong>
+            </div>
+
+            <ul class="list-unstyled components" id="navbar-example3">
+                <li>
+                    <a href="#!/home">
+                        <i class="fad fa-home-alt"></i> Trang chủ
+                    </a>
+                </li>
+                <li>
+                    <a href="#userSubmenu" data-toggle="collapse" id="targetSidebar" aria-expanded="false" class="dropdown-toggle" target="_self">
+                        <i class="fad fa-users-cog"></i> Người dùng
+                    </a>
+                    <ul class="collapse list-unstyled" id="userSubmenu">
+                        <li>
+                            <a href="#!/listUsers">Tất cả</a>
+                        </li>
+                        <li>
+                            <a href="#!/listUsersActivated">Đã kích hoạt</a>
+                        </li>
+                        <li>
+                            <a href="#!/listUsersNotActivated">Chưa kích hoạt</a>
+                        </li>
+                        <li>
+                            <a href="#!/listUsersBlock">Đã bị khóa</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#shopSubmenu" data-toggle="collapse" id="targetSidebar" aria-expanded="false" class="dropdown-toggle" target="_self">
+                        <i class="fad fa-store"></i> Đại lý
+                    </a>
+                    <ul class="collapse list-unstyled" id="shopSubmenu">
+                        <li>
+                            <a href="#!/listShops">Tất cả</a>
+                        </li>
+                        <li>
+                            <a href="#!/listShopsActivated">Đã kích hoạt</a>
+                        </li>
+                        <li>
+                            <a href="#!/listShopsNotActivated">Chưa kích hoạt</a>
+                        </li>
+                        <li>
+                            <a href="#!/listShopsBlock">Đã bị khóa</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#pageSubmenu" data-toggle="collapse" id="targetSidebar" aria-expanded="false" class="dropdown-toggle" target="_self">
+                        <i class="fad fa-clipboard"></i> Tin được đăng
+                    </a>
+                    <ul class="collapse list-unstyled" id="pageSubmenu">
+                        <li>
+                            <a href="#!/listPostings">Tất cả</a>
+                        </li>
+                        <li>
+                            <a href="#!/listPostingsUnapproved">Tin chưa duyệt</a>
+                        </li>
+                        <li>
+                            <a href="#!/listPostingsApproved">Tin đã duyệt</a>
+                        </li>
+                        <li>
+                            <a href="#!/listPostingsSold">Tin đã bán</a>
+                        </li>
+                        <li>
+                            <a href="#!/listPostingsBlock">Tin bị khóa</a>
+                        </li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#!/statistics">
+                        <i class="fad fa-clipboard-list"></i> Thống kê bản tin
+                    </a>
+                </li>
+                <!-- <li>
+                    <a href="#">
+                        <i class="fas fa-question"></i> FAQ
+                    </a>
+                </li>
+                <li>
+                    <a href="#">
+                        <i class="fas fa-paper-plane"></i> Contact
+                    </a>
+                </li> -->
+            </ul>
+        </div>
+
+        <div id="content">
+            <nav class="navbar navbar-expand-lg sticky-top">
+                <div class="container-fluid">
+                    <button type="button" id="sidebarCollapse" class="btn btn-warning toggle-navar" target="_self">
+                        <i class="fal fa-sliders-h"></i>
+                    </button>
+                    <button class="btn btn-dark d-inline-block d-lg-none ml-auto" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <i class="fas fa-align-justify"></i>
+                    </button>
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="nav navbar-nav ml-auto">
+                            <!-- <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    <i class="fal fa-bell"></i>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="#">
+                                    <i class="fal fa-envelope"></i>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link">
+                                    <i class="fad fa-grip-lines-vertical"></i>
+                                </a>
+                            </li> -->
+                            <li class="nav-item">
+                                <a class="nav-link" th:href="@{/logout-admin}">
+                                    <span th:text="${admin.fullname}"></span>
+                                    <i class="fad fa-user-crown"></i>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="" ng-view></div>
+
+        </div>
+    </div>
+    <footer ng-include="'views/layouts/footer.html'"></footer>
+
+    <!-- jQuery CDN - Slim version (=without AJAX) -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- Popper.JS -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.0/umd/popper.min.js" integrity="sha384-cs/chFZiN24E4KMATLdqdvsezGxaGsi4hLGOzlXwp5UZB1LY//20VyM2taTB4QvJ" crossorigin="anonymous"></script>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.14/angular.min.js"></script>
+    <!-- Bootstrap JS -->
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.0/js/bootstrap.min.js" integrity="sha384-uefMccjFJAIv6A+rW+L4AHf99KvxDjWSu1z9VI8SKNVmz4sk7buKt/6v9KI65qnm" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.0/jquery.js"></script>
+
+    <script src="/js/app-admin.js"></script>
+
+    <script src="core/directives/convert.js"></script>
+
+    <script src="/services/userFactory.js"></script>
+    <script src="/services/shopFactory.js"></script>
+    <script src="/services/postingFactory.js"></script>
+
+    <script src="/views/homes/homeController.js"></script>
+    <script src="/views/users/userController.js"></script>
+    <script src="/views/shops/shopController.js"></script>
+    <script src="/views/postings/postingController.js"></script>
+    <script src="/views/statistics/statisticController.js"></script>
+
+    <script src="/core/version/version.js"></script>
+    <script src="/core/version/version-directive.js"></script>
+    <script src="/core/version/interpolate-filter.js"></script>
+
+</body>
+
+</html>

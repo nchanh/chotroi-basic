@@ -1,0 +1,154 @@
+<!doctype html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org"
+	xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{layouts/admin.html}">
+
+<head>
+</head>
+
+<body>
+	<div class="container-fluid register-container" layout:fragment="content">
+		<img src="/images/choTroi2.png" alt="choTroi2"
+		class="register-image"> <span class="sub-title-register">Website Chuyên Mua Bán, Trao Đổi Đồ Cũ</span>
+		<div class="row card-register justify-content-lg-end justify-content-sm-center">
+			<div class="col-md-5 col-sm-12 col-xs-12 card-register-container">
+				<h2 class="title-register mb-4">Đăng Ký Tài Khoản</h2>
+				<div class="tabbar">
+					<button class="btn button-tabbar tablink w3-white" onclick="openUser(event,'Customer')">Khách hàng</button>
+					<button class="btn button-tabbar tablink" onclick="openUser(event,'Shop')">Đại lý</button>
+			</div>
+
+				<div id="Customer" class="w3-container user">
+					<div th:if="${message != null}">
+						<h5 th:text="${message}" class="alert alert-success text-center"></h5>
+				</div>
+					<div th:if="${messageError != null}">
+						<h5 th:text="${messageError}" class="alert alert-danger text-center"></h5>
+				</div>
+					<form th:action="@{/save-signup-user}" method="post" th:object="${userRegister}">
+						<div class="form-group"><label for="username">Tài khoản:</label> <input type="text" class="form-control"
+							th:field="*{username}" placeholder="Tài khoản" required></div>
+						<div class="form-group"><label for="password">Mật khẩu:</label> <input type="password" class="form-control"
+							th:field="*{password}" placeholder="Mật khẩu" required></div>
+						<div class="form-group"><label for="email">Email:</label> <input type="email" class="form-control"
+							th:field="*{email}" placeholder="Email" required></div>
+						<div class="form-group"><label for="phone">Số điện thoại:</label> <input type="text" class="form-control"
+							th:field="*{phone}" placeholder="Số điện thoại" maxlength="10" minlength="10" required></div>
+
+						<div class="form-group form-check"><input type="checkbox" class="form-check-input" id="exampleCheck1"
+							required> <label for="agree-term" class="label-agree-term">Tôi đồng ý tất cả các tuyên bố trong <a
+								href="#" class="text-warning" data-toggle="modal" data-target="#exampleModalLong">Điều khoản dịch vụ</a>
+								<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog"
+								aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+									<div class="modal-dialog" role="document">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title text-dark" id="exampleModalLongTitle">ĐIỀU KHOẢN SỬ DỤNG</h5>
+												<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+													aria-hidden="true">&times;</span></button>
+										</div>
+											<div class="modal-body text-dark"><b>1. QUY ĐỊNH CHUNG</b> <br>Điều khoản Sử dụng quy định các
+												điều khoản ràng buộc bạn khi sử dụng các Dịch vụ. Thuật ngữ “Bạn” và/hoặc “Người sử dụng” sau đây được gọi
+												chung để chỉ tới những người sử dụng các Dịch vụ. Vui lòng nghiên cứu kỹ và lưu lại một bản Điều khoản Sử
+												dụng này.<br> <br>Bằng việc ghé thăm website chúng tôi và sử dụng các Dịch vụ, Bạn đồng ý bị ràng
+												buộc với Điều khoản Sử dụng này, Chính sách Quảng cáo và Chính sách Bảo mật của chúng tôi.<br> <br>
+												Chúng tôi thực hiện Điều khoản Sử dụng này, Chính sách Quảng cáo và Chính sách bảo mật theo quy định của
+												pháp luật hiện hành và không nội dung nào trong các tài liệu trên cản trở quyền của chúng tôi tuân thủ các
+												quy định hoặc yêu cầu của chính phủ, tòa án, cơ quan thi hành án liên quan đến việc Bạn sử dụng các Dịch vụ
+												hoặc thông tin do chúng tôi nhận được hoặc thu được từ việc sử dụng các Dịch vụ của Bạn.<br> <br>
+												<b>2. TỪ CHỐI BẢO ĐẢM</b> <br>Website chúng tôi và các Dịch vụ được cung cấp dựa trên nguyên tắc không
+												bảo hành, trên cơ sở dịch vụ và tính năng sẵn có mà Chúng tôi không đảm bảo rằng các tính năng trên website
+												chúng tôi hoặc các Dịch vụ sẽ đáp ứng các yêu cầu của Bạn hoặc đảm bảo rằng sự vận hành các phần mềm hoặc
+												các Dịch vụ sẽ không bị gián đoạn hoặc bị lỗi.<br> <br> Chúng tôi không chịu trách nhiệm đối với
+												bất kỳ sự mất mát dữ liệu, tổn thất lợi ích nào hoặc các vấn đề khác liên quan đến việc truy cập website
+												chúng tôi và sử dụng các Dịch vụ, bao gồm nhưng không giới hạn đến tất cả các thông tin, dữ liệu, văn bản,
+												phần mềm, âm nhạc, âm thanh, hình ảnh, đồ họa, video, thông điệp hoặc các nguyên liệu khác (“Nội dung”) mà
+												Bạn có thể lưu giữ, đưa lên, hoặc truyền tải thông qua Dịch vụ. Bạn đồng ý sử dụng các Dịch vụ với tất cả sự
+												rủi ro.<br> <br>
+											<b>3. THAY ĐỔI ĐIỀU KHOẢN SỬ DỤNG</b><br>Chúng tôi giữ quyền thay đổi và/hoặc sửa đổi mà không cần báo
+												trước bất kỳ điều khoản nào trong Điều khoản Sử dụng này tùy từng thời điểm. Những sự thay đổi và/hoặc sửa
+												đổi như vậy sẽ có hiệu lực ngay khi đăng lên website chúng tôi. Nếu Bạn tiếp tục truy cập chúng tôi hoặc sử
+												dụng các Dịch vụ sau khi các thay đổi và/hoặc sửa đổi được đăng lên, Bạn đã chấp nhận và đồng ý với các thay
+												đổi và/hoặc sửa đổi đó.<br> <br> <b>4. QUY ĐỊNH SỬ DỤNG DỊCH VỤ</b> <br>Khi sử dụng Dịch vụ
+												của chúng tôi, bên cạnh việc phải ký hợp đồng dịch vụ theo mẫu do chúng tôi ban hành, Bạn còn bị ràng buộc
+												phải chấp thuận và tuân thủ các điều kiện quy định dưới đây :<br>– Thanh toán phí dịch vụ theo thỏa
+												thuận<br>– Tuân thủ quy định của pháp luật<br>– Các tranh chấp xảy ra nếu có do hai bên thỏa thuận
+												giải quyết trên cơ sở hợp tác và thỏa thuận.</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</label></div>
+						<div class="text-center"><input class="btn button-register" type="submit" value="Đăng ký" /></div>
+					</form>
+				</div>
+
+
+				<div id="Shop" class="w3-container user" style="display: none">
+					<form th:action="@{/save-signup-shop}" method="post" th:object="${shopRegister}" enctype="multipart/form-data">
+						<div class="form-group"><label for="username">Tài khoản:</label> <input type="text" class="form-control"
+							th:field="*{username}" placeholder="Tài khoản" required></div>
+						<div class="form-group"><label for="password">Mật khẩu:</label> <input type="password" class="form-control"
+							th:field="*{password}" placeholder="Mật khẩu" required></div>
+						<div class="form-group"><label for="email">Email:</label> <input type="email" class="form-control"
+							th:field="*{email}" placeholder="Email" required></div>
+						<div class="form-group"><label for="phone">Số điện thoại:</label> <input type="text" class="form-control"
+							th:field="*{phone}" placeholder="Số điện thoại" maxlength="10" minlength="10" required></div>
+
+						<div class="form-group form-check"><input type="checkbox" class="form-check-input" id="exampleCheck1"
+							required> <label for="agree-term" class="label-agree-term">Tôi đồng ý tất cả các tuyên bố trong <a
+								href="#" class="text-warning" data-toggle="modal" data-target="#exampleModalLong">Điều khoản dịch vụ</a>
+								<div class="modal fade" id="exampleModalLong" tabindex="-1" role="dialog"
+								aria-labelledby="exampleModalLongTitle" aria-hidden="true">
+									<div class="modal-dialog" role="document">
+										<div class="modal-content">
+											<div class="modal-header">
+												<h5 class="modal-title text-dark" id="exampleModalLongTitle">ĐIỀU KHOẢN SỬ DỤNG</h5>
+												<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+													aria-hidden="true">&times;</span></button>
+										</div>
+											<div class="modal-body text-dark"><b>1. QUY ĐỊNH CHUNG</b> <br>Điều khoản Sử dụng quy định các
+												điều khoản ràng buộc bạn khi sử dụng các Dịch vụ. Thuật ngữ “Bạn” và/hoặc “Người sử dụng” sau đây được gọi
+												chung để chỉ tới những người sử dụng các Dịch vụ. Vui lòng nghiên cứu kỹ và lưu lại một bản Điều khoản Sử
+												dụng này.<br> <br>Bằng việc ghé thăm website chúng tôi và sử dụng các Dịch vụ, Bạn đồng ý bị ràng
+												buộc với Điều khoản Sử dụng này, Chính sách Quảng cáo và Chính sách Bảo mật của chúng tôi.<br> <br>
+												Chúng tôi thực hiện Điều khoản Sử dụng này, Chính sách Quảng cáo và Chính sách bảo mật theo quy định của
+												pháp luật hiện hành và không nội dung nào trong các tài liệu trên cản trở quyền của chúng tôi tuân thủ các
+												quy định hoặc yêu cầu của chính phủ, tòa án, cơ quan thi hành án liên quan đến việc Bạn sử dụng các Dịch vụ
+												hoặc thông tin do chúng tôi nhận được hoặc thu được từ việc sử dụng các Dịch vụ của Bạn.<br> <br>
+												<b>2. TỪ CHỐI BẢO ĐẢM</b> <br>Website chúng tôi và các Dịch vụ được cung cấp dựa trên nguyên tắc không
+												bảo hành, trên cơ sở dịch vụ và tính năng sẵn có mà Chúng tôi không đảm bảo rằng các tính năng trên website
+												chúng tôi hoặc các Dịch vụ sẽ đáp ứng các yêu cầu của Bạn hoặc đảm bảo rằng sự vận hành các phần mềm hoặc
+												các Dịch vụ sẽ không bị gián đoạn hoặc bị lỗi.<br> <br> Chúng tôi không chịu trách nhiệm đối với
+												bất kỳ sự mất mát dữ liệu, tổn thất lợi ích nào hoặc các vấn đề khác liên quan đến việc truy cập website
+												chúng tôi và sử dụng các Dịch vụ, bao gồm nhưng không giới hạn đến tất cả các thông tin, dữ liệu, văn bản,
+												phần mềm, âm nhạc, âm thanh, hình ảnh, đồ họa, video, thông điệp hoặc các nguyên liệu khác (“Nội dung”) mà
+												Bạn có thể lưu giữ, đưa lên, hoặc truyền tải thông qua Dịch vụ. Bạn đồng ý sử dụng các Dịch vụ với tất cả sự
+												rủi ro.<br> <br>
+											<b>3. THAY ĐỔI ĐIỀU KHOẢN SỬ DỤNG</b><br>Chúng tôi giữ quyền thay đổi và/hoặc sửa đổi mà không cần báo
+												trước bất kỳ điều khoản nào trong Điều khoản Sử dụng này tùy từng thời điểm. Những sự thay đổi và/hoặc sửa
+												đổi như vậy sẽ có hiệu lực ngay khi đăng lên website chúng tôi. Nếu Bạn tiếp tục truy cập chúng tôi hoặc sử
+												dụng các Dịch vụ sau khi các thay đổi và/hoặc sửa đổi được đăng lên, Bạn đã chấp nhận và đồng ý với các thay
+												đổi và/hoặc sửa đổi đó.<br> <br> <b>4. QUY ĐỊNH SỬ DỤNG DỊCH VỤ</b> <br>Khi sử dụng Dịch vụ
+												của chúng tôi, bên cạnh việc phải ký hợp đồng dịch vụ theo mẫu do chúng tôi ban hành, Bạn còn bị ràng buộc
+												phải chấp thuận và tuân thủ các điều kiện quy định dưới đây :<br>– Thanh toán phí dịch vụ theo thỏa
+												thuận<br>– Tuân thủ quy định của pháp luật<br>– Các tranh chấp xảy ra nếu có do hai bên thỏa thuận
+												giải quyết trên cơ sở hợp tác và thỏa thuận.</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-secondary" data-dismiss="modal">Đóng</button>
+										</div>
+									</div>
+								</div>
+							</div>
+						</label></div>
+						<div class="text-center"><input class="btn button-register" type="submit" value="Đăng ký" /></div>
+				</form>
+			</div>
+		</div>
+	</div></div>
+
+</body>
+
+</html>
